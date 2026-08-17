@@ -11,7 +11,13 @@ export default class ErrorBoundary extends Component {
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true, message: error?.message || "Unknown error" };
+    return {
+      hasError: true,
+      message:
+        typeof error === "string"
+          ? error
+          : error?.message || (typeof error === "object" ? JSON.stringify(error) : String(error)),
+    };
   }
 
   componentDidCatch(error, info) {

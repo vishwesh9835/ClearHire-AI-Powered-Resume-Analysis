@@ -390,7 +390,9 @@ const ResumeUpload = ({ bootstrap }) => {
           <div className="error-icon" aria-hidden="true">⚠</div>
           <div>
             <div className="error-title">Something went wrong</div>
-            <div className="error-msg">{error}</div>
+            <div className="error-msg">
+              {typeof error === "string" ? error : (error?.message || JSON.stringify(error))}
+            </div>
           </div>
         </div>
       )}

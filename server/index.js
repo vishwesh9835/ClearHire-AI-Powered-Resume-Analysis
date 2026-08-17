@@ -71,10 +71,7 @@ app.use("/api/interview-questions", heavyLimiter);
 app.use("/api/cover-letter", heavyLimiter);
 
 function clientErrorMessage(err) {
-  if (NODE_ENV === "production") {
-    return "Something went wrong. Please try again.";
-  }
-  return err.message || "Request failed";
+  return err?.message || "Something went wrong. Please try again.";
 }
 
 function parseJsonFromModel(raw) {
@@ -90,12 +87,17 @@ function parseJsonFromModel(raw) {
 }
 
 if (!GROQ_API_KEY) {
-  console.error("\n❌ FATAL: GROQ_API_KEY is not set. Get a free key at: https://console.groq.com\n");
-  process.exit(1);
+  console.error("\n❌ WARNING: GROQ_API_KEY is not set. Get a free key at: https://console.groq.com\n");
+  if (!process.env.VERCEL) {
+    process.exit(1);
+  }
 }
-const groq = new Groq({ apiKey: GROQ_API_KEY });
+const groq = GROQ_API_KEY ? new Groq({ apiKey: GROQ_API_KEY }) : null;
 
 async function createCompletionWithFallback(params) {
+  if (!groq) {
+    throw new Error("GROQ_API_KEY is missing on the server. Please configure GROQ_API_KEY environment variable.");
+  }
   let lastError;
   for (const model of FALLBACK_MODELS) {
     try {

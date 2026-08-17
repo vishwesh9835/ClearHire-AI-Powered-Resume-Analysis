@@ -9,16 +9,37 @@ const client = axios.create({
 });
 
 export function getApiErrorMessage(err) {
+  if (!err) return "An unknown error occurred.";
+
   if (axios.isAxiosError(err)) {
     const data = err.response?.data;
-    if (data && typeof data === "object" && data.error != null) {
-      return String(data.error);
+    if (data != null) {
+      if (typeof data === "string") {
+        if (data.includes("<html") || data.includes("<!DOCTYPE")) {
+          return `Server returned status ${err.response?.status || 500}. Please check server status.`;
+        }
+        return data;
+      }
+      if (typeof data === "object") {
+        if (typeof data.error === "string") {
+          return data.error;
+        }
+        if (data.error != null && typeof data.error === "object") {
+          return data.error.message || data.error.code || JSON.stringify(data.error);
+        }
+        if (typeof data.message === "string") {
+          return data.message;
+        }
+      }
     }
     if (err.response?.status === 429) {
       return "You're sending requests too fast. Please wait a moment and try again.";
     }
     if (err.response?.status === 413) {
       return "Request too large. Try a shorter resume or job description.";
+    }
+    if (err.response?.status === 500) {
+      return "Server error (500). Please check backend logs or API configuration.";
     }
     if (err.code === "ECONNABORTED") {
       return "Request timed out. Please try again.";
@@ -28,8 +49,13 @@ export function getApiErrorMessage(err) {
     }
     return err.message || "Request failed";
   }
+
   if (err instanceof Error) return err.message;
-  return "Something went wrong. Please try again.";
+  if (typeof err === "string") return err;
+  if (typeof err === "object") {
+    return err.message || err.error || JSON.stringify(err);
+  }
+  return String(err) || "Something went wrong. Please try again.";
 }
 
 export async function analyzeResume(resumeText, options = {}) {
