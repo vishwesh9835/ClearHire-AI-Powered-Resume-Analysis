@@ -36,7 +36,7 @@ const app = express();
 app.use(helmet());
 
 // In production require an explicit CLIENT_ORIGIN so we never open CORS to *
-if (NODE_ENV === "production" && (!CLIENT_ORIGIN || CLIENT_ORIGIN === "*")) {
+if (NODE_ENV === "production" && (!CLIENT_ORIGIN || CLIENT_ORIGIN === "*") && !process.env.VERCEL) {
   console.error(
     "\n❌ FATAL: CLIENT_ORIGIN env var must be set to your frontend URL in production.\n" +
     "   Example: CLIENT_ORIGIN=https://myapp.onrender.com\n"
@@ -323,23 +323,27 @@ if (fs.existsSync(clientBuildPath)) {
   );
 }
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT} (model: ${GROQ_MODEL})`);
-});
-
-// ─── Graceful shutdown (SIGTERM from cloud platforms / containers) ──────────
-function shutdown(signal) {
-  console.log(`\nReceived ${signal}. Closing server gracefully…`);
-  server.close(() => {
-    console.log("Server closed.");
-    process.exit(0);
+if (!process.env.VERCEL) {
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT} (model: ${GROQ_MODEL})`);
   });
-  // Force exit if graceful close takes too long
-  setTimeout(() => {
-    console.error("Forced exit after timeout.");
-    process.exit(1);
-  }, 10_000).unref();
+
+  // ─── Graceful shutdown (SIGTERM from cloud platforms / containers) ──────────
+  function shutdown(signal) {
+    console.log(`\nReceived ${signal}. Closing server gracefully…`);
+    server.close(() => {
+      console.log("Server closed.");
+      process.exit(0);
+    });
+    // Force exit if graceful close takes too long
+    setTimeout(() => {
+      console.error("Forced exit after timeout.");
+      process.exit(1);
+    }, 10_000).unref();
+  }
+
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
 }
 
-process.on("SIGTERM", () => shutdown("SIGTERM"));
-process.on("SIGINT", () => shutdown("SIGINT"));
+module.exports = app;
