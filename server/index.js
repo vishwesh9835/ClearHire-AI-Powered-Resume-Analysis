@@ -1,6 +1,11 @@
-require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
+
+// Load .env from cwd, from server/ directory, and from root directory
+require("dotenv").config();
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
+
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -19,16 +24,6 @@ const { normalizeAnalysis } = require("./lib/normalizeAnalysis");
 const PORT = Number(process.env.PORT) || 5000;
 const NODE_ENV = process.env.NODE_ENV || "development";
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN;
-
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
-const FALLBACK_MODELS = Array.from(new Set([
-  GROQ_MODEL,
-  "openai/gpt-oss-120b",
-  "qwen/qwen3.6-27b",
-  "openai/gpt-oss-20b",
-  "groq/compound",
-]));
 
 const app = express();
 
@@ -86,20 +81,30 @@ function parseJsonFromModel(raw) {
   }
 }
 
-if (!GROQ_API_KEY) {
-  console.error("\n❌ WARNING: GROQ_API_KEY is not set. Get a free key at: https://console.groq.com\n");
-  if (!process.env.VERCEL) {
-    process.exit(1);
-  }
+function getGroqClient() {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return null;
+  return new Groq({ apiKey });
 }
-const groq = GROQ_API_KEY ? new Groq({ apiKey: GROQ_API_KEY }) : null;
 
 async function createCompletionWithFallback(params) {
+  const groq = getGroqClient();
   if (!groq) {
-    throw new Error("GROQ_API_KEY is missing on the server. Please configure GROQ_API_KEY environment variable.");
+    throw new Error(
+      "GROQ_API_KEY is missing on the server. If deploying to Vercel, please add GROQ_API_KEY in Vercel Dashboard (Project Settings -> Environment Variables) and redeploy."
+    );
   }
+  const mainModel = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+  const fallbackModels = Array.from(new Set([
+    mainModel,
+    "openai/gpt-oss-120b",
+    "qwen/qwen3.6-27b",
+    "openai/gpt-oss-20b",
+    "groq/compound",
+  ]));
+
   let lastError;
-  for (const model of FALLBACK_MODELS) {
+  for (const model of fallbackModels) {
     try {
       const result = await groq.chat.completions.create({
         ...params,
@@ -227,7 +232,11 @@ app.post("/api/improve-summary", async (req, res) => {
 
 // health check
 app.get("/api/health", (req, res) =>
-  res.json({ status: "ok", model: GROQ_MODEL, fallbackModels: FALLBACK_MODELS, hasApiKey: Boolean(GROQ_API_KEY) })
+  res.json({
+    status: "ok",
+    model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+    hasApiKey: Boolean(process.env.GROQ_API_KEY),
+  })
 );
 
 // ─── POST /api/interview-questions ───────────────────────────────────────────
@@ -327,7 +336,7 @@ if (fs.existsSync(clientBuildPath)) {
 
 if (!process.env.VERCEL) {
   const server = app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT} (model: ${GROQ_MODEL})`);
+    console.log(`Server running on http://localhost:${PORT} (model: ${process.env.GROQ_MODEL || "openai/gpt-oss-120b"})`);
   });
 
   // ─── Graceful shutdown (SIGTERM from cloud platforms / containers) ──────────
