@@ -66,7 +66,20 @@ app.use("/api/interview-questions", heavyLimiter);
 app.use("/api/cover-letter", heavyLimiter);
 
 function clientErrorMessage(err) {
-  return err?.message || "Something went wrong. Please try again.";
+  if (!err) return "Something went wrong. Please try again.";
+  let msg = err.message || err.error;
+  if (typeof msg === "object") {
+    try {
+      msg = JSON.stringify(msg);
+    } catch {
+      msg = "An unexpected error occurred.";
+    }
+  }
+  const str = String(msg);
+  if (str === "[object Object]") {
+    return "An unexpected error occurred.";
+  }
+  return str || "Something went wrong. Please try again.";
 }
 
 function parseJsonFromModel(raw) {

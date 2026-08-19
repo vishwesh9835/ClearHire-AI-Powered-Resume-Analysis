@@ -11,6 +11,22 @@ const client = axios.create({
 export function getApiErrorMessage(err) {
   if (!err) return "An unknown error occurred.";
 
+  const extractString = (val) => {
+    if (typeof val === "string") {
+      if (val === "[object Object]") return null;
+      return val;
+    }
+    if (val && typeof val === "object") {
+      try {
+        const s = JSON.stringify(val);
+        if (s !== "{}" && s !== "[]") return s;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  };
+
   if (axios.isAxiosError(err)) {
     const data = err.response?.data;
     if (data != null) {
@@ -18,17 +34,17 @@ export function getApiErrorMessage(err) {
         if (data.includes("<html") || data.includes("<!DOCTYPE")) {
           return `Server returned status ${err.response?.status || 500}. Please check server status.`;
         }
-        return data;
+        return data !== "[object Object]" ? data : "Unexpected object response from server";
       }
       if (typeof data === "object") {
         if (typeof data.error === "string") {
-          return data.error;
+          return data.error !== "[object Object]" ? data.error : "Unexpected error object";
         }
         if (data.error != null && typeof data.error === "object") {
-          return data.error.message || data.error.code || JSON.stringify(data.error);
+          return extractString(data.error.message) || extractString(data.error.code) || extractString(data.error) || "Server error";
         }
         if (typeof data.message === "string") {
-          return data.message;
+          return data.message !== "[object Object]" ? data.message : "Unexpected message object";
         }
       }
     }
@@ -41,21 +57,25 @@ export function getApiErrorMessage(err) {
     if (err.response?.status === 500) {
       return "Server error (500). Please check backend logs or API configuration.";
     }
-    if (err.code === "ECONNABORTED") {
-      return "Request timed out. Please try again.";
-    }
     if (!err.response) {
       return "Cannot reach the server. Is the API running?";
     }
-    return err.message || "Request failed";
+    return err.message !== "[object Object]" ? err.message : "Request failed";
   }
 
-  if (err instanceof Error) return err.message;
-  if (typeof err === "string") return err;
-  if (typeof err === "object") {
-    return err.message || err.error || JSON.stringify(err);
+  if (err instanceof Error) {
+    if (err.message && err.message !== "[object Object]") return err.message;
   }
-  return String(err) || "Something went wrong. Please try again.";
+  
+  if (typeof err === "string" && err !== "[object Object]") return err;
+  
+  if (typeof err === "object") {
+    const msg = extractString(err.message) || extractString(err.error) || extractString(err);
+    if (msg) return msg;
+  }
+  
+  const str = String(err);
+  return str === "[object Object]" ? "Something went wrong. Please try again." : str;
 }
 
 export async function analyzeResume(resumeText, options = {}) {
