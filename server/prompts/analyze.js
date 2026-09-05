@@ -1,24 +1,33 @@
+/**
+ * Prompt builder for the main resume analysis endpoint (POST /api/analyze).
+ *
+ * buildAnalyzePrompt() constructs the full user-turn message sent to the model.
+ * The model is instructed to respond with a single JSON object matching the
+ * schema defined below — no markdown fences, no extra prose.
+ *
+ * MAX_RESUME is exported so the route handler can validate input length before
+ * sending it to the model.
+ */
+
 const MAX_RESUME = 12000;
-const MAX_JD = 8000;
+const MAX_JD     = 8000;
 
 function buildAnalyzePrompt(resumeText, jobDescription, tailorMode) {
   const resume = resumeText.slice(0, MAX_RESUME);
-  const jd = (jobDescription || "").trim().slice(0, MAX_JD);
-  const hasJD = jd.length > 0;
+  const jd     = (jobDescription || "").trim().slice(0, MAX_JD);
+  const hasJD  = jd.length > 0;
 
+  // Inject the job description block only when one was provided
   const jdBlock = hasJD
-    ? `Job description (for match analysis):
-"""
-${jd}
-"""
-`
+    ? `Job description (for match analysis):\n"""\n${jd}\n"""\n`
     : "No job description was provided. Set matchScore to null, matchExplanation to empty string, and focus on general resume quality.";
 
+  // Tailor the analysis focus based on whether a JD and tailorMode flag are set
   const tailor = tailorMode && hasJD
     ? "Prioritize tailoring advice to this job: align keywords, reorder emphasis, and surface gaps vs the JD."
     : "Give balanced, role-agnostic advice.";
 
-  const userContent = `You are an expert recruiter and ATS-savvy resume coach. ${tailor}
+  return `You are an expert recruiter and ATS-savvy resume coach. ${tailor}
 
 ${jdBlock}
 
@@ -65,8 +74,6 @@ Respond with a single JSON object only (no markdown fences). Use this schema:
     "gap": string[]
   } (compare skills to JD if present; else reasonable overlap vs detected skills)
 }`;
-
-  return userContent;
 }
 
 module.exports = { buildAnalyzePrompt, MAX_RESUME, MAX_JD };

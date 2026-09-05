@@ -1,15 +1,26 @@
-const MAX_TEXT = 4000;
+/**
+ * Prompt builders for the secondary AI endpoints:
+ *   - buildRewriteBulletPrompt     → POST /api/rewrite-bullet
+ *   - buildImproveSummaryPrompt    → POST /api/improve-summary
+ *   - buildInterviewQuestionsPrompt → POST /api/interview-questions
+ *   - buildCoverLetterPrompt       → POST /api/cover-letter
+ *
+ * Each function returns a plain string (the user-turn prompt).
+ * The model is always instructed to reply with JSON only — no prose, no fences.
+ */
 
+const MAX_TEXT = 4000; // max characters for job-description snippets in these prompts
+
+/** Rewrites a single resume bullet point for impact and clarity. */
 function buildRewriteBulletPrompt(bulletText, jobDescription, contextSection) {
-  const jd = (jobDescription || "").trim().slice(0, MAX_TEXT);
-  const bullet = (bulletText || "").trim().slice(0, 2000);
+  const jd     = (jobDescription  || "").trim().slice(0, MAX_TEXT);
+  const bullet = (bulletText      || "").trim().slice(0, 2000);
   const section = (contextSection || "Experience").slice(0, 80);
 
   return `You improve resume bullet points. Rewrite for impact: strong verb, quantified outcome, clarity, no first person.
 
 Section: ${section}
-${jd ? `Job context (optional): ${jd}\n` : ""}
-Original bullet:
+${jd ? `Job context (optional): ${jd}\n` : ""}Original bullet:
 """
 ${bullet}
 """
@@ -17,14 +28,14 @@ ${bullet}
 Reply with JSON only: {"before": string (echo original), "after": string (rewritten bullet, one line)}`;
 }
 
+/** Rewrites the professional summary section to be crisp and impactful. */
 function buildImproveSummaryPrompt(summaryText, jobDescription) {
-  const jd = (jobDescription || "").trim().slice(0, MAX_TEXT);
-  const summary = (summaryText || "").trim().slice(0, 2000);
+  const jd      = (jobDescription || "").trim().slice(0, MAX_TEXT);
+  const summary = (summaryText    || "").trim().slice(0, 2000);
 
   return `You write concise professional resume summaries (3-5 lines max, no buzzword stuffing).
 
-${jd ? `Target role context:\n${jd}\n\n` : ""}
-Current summary:
+${jd ? `Target role context:\n${jd}\n\n` : ""}Current summary:
 """
 ${summary}
 """
@@ -32,14 +43,14 @@ ${summary}
 Reply with JSON only: {"improved": string (rewritten summary)}`;
 }
 
+/** Generates personalised interview prep questions from the candidate's resume. */
 function buildInterviewQuestionsPrompt(resumeText, jobDescription) {
-  const resume = (resumeText || "").trim().slice(0, 6000);
-  const jd = (jobDescription || "").trim().slice(0, 3000);
+  const resume = (resumeText     || "").trim().slice(0, 6000);
+  const jd     = (jobDescription || "").trim().slice(0, 3000);
 
   return `You are an expert interview coach. Based on the candidate's resume${jd ? " and the job description" : ""}, generate targeted interview questions they should prepare for.
 
-${jd ? `Job description:\n"""\n${jd}\n"""\n` : ""}
-Resume:
+${jd ? `Job description:\n"""\n${jd}\n"""\n` : ""}Resume:
 """
 ${resume}
 """
@@ -53,17 +64,18 @@ Reply with JSON only (no markdown):
 }`;
 }
 
+/** Generates a tailored cover letter for the candidate. */
 function buildCoverLetterPrompt(resumeText, jobDescription, tone) {
-  const resume = (resumeText || "").trim().slice(0, 6000);
-  const jd = (jobDescription || "").trim().slice(0, 3000);
+  const resume  = (resumeText     || "").trim().slice(0, 6000);
+  const jd      = (jobDescription || "").trim().slice(0, 3000);
+  // Accept only known tones; default to professional
   const toneStr = ["professional", "enthusiastic", "concise"].includes(tone)
     ? tone
     : "professional";
 
   return `You write compelling, human cover letters. Tone: ${toneStr}. No generic phrases like "I am writing to express my interest". No clichés. Be specific to the candidate's actual experience.
 
-${jd ? `Job description:\n"""\n${jd}\n"""\n` : "Target role: general application\n"}
-Resume:
+${jd ? `Job description:\n"""\n${jd}\n"""\n` : "Target role: general application\n"}Resume:
 """
 ${resume}
 """
