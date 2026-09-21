@@ -1,47 +1,47 @@
-# ClearHire — AI-Powered Resume Analysis
+# ClearHire — AI-Powered Resume Analysis 🚀
 
-AI-powered resume analysis using Groq's Llama 3.3 70B. Upload a resume (PDF or DOCX), get section-by-section feedback, keyword matching, summary rewrites, suggested bullet improvements, and a downloadable report.
+AI-powered resume analysis using Groq's Llama 3.3. Upload a resume (PDF or DOCX), get section-by-section feedback, keyword matching, summary rewrites, suggested bullet improvements, and a downloadable report.
 
 ## 🎯 Features
 
-- **Resume Upload & Parsing**: Upload resumes as PDF or DOCX with automatic text extraction
-- **AI-Powered Analysis**: Uses Groq's Llama 3.3 70B to analyze resume content comprehensively
-- **Skills Matching**: Identifies and matches skills against job requirements
-- **Keyword Analysis**: Groups and analyzes keyword density and relevance
-- **Formatting Feedback**: Detects formatting issues and provides suggestions
-- **Weak Bullet Optimization**: Identifies weak resume bullets and suggests improvements
-- **Summary Rewriting**: AI-generated improvements for resume summaries
-- **Score Visualization**: Get a visual score breakdown across multiple categories
-- **Report Generation**: Export analysis results as markdown reports
-- **Analysis History**: Track and manage previous resume analyses locally
-- **Try a Sample Resume**: One click fills in a fictional resume + matching job description — lets anyone (including recruiters trying a live demo link) see a full analysis with no file needed
-- **Keyboard Shortcut**: Ctrl/Cmd+Enter while typing runs the analysis
+- **Resume Upload & Parsing**: Upload resumes as PDF or DOCX with automatic text extraction.
+- **AI-Powered Analysis**: Leverages Groq's Llama 3.3 for comprehensive resume content analysis.
+- **Skills Matching**: Identifies and matches skills against job requirements.
+- **Keyword Analysis**: Groups and analyzes keyword density and relevance.
+- **Formatting Feedback**: Detects formatting issues and provides actionable suggestions.
+- **Weak Bullet Optimization**: Identifies weak resume bullets and suggests improvements.
+- **Summary Rewriting**: Generates AI-powered improvements for resume summaries.
+- **Score Visualization**: Provides a visual breakdown of scores across multiple categories.
+- **Report Generation**: Exports analysis results as downloadable Markdown reports.
+- **Analysis History**: Tracks and manages previous resume analyses locally in the browser.
+- **Sample Resume Demo**: One-click functionality to populate with a fictional resume and job description for immediate analysis.
+- **Keyboard Shortcut**: Analyze with `Ctrl/Cmd+Enter` while typing.
 
 ## 🛠️ Tech Stack
 
 ### Frontend
 
-- **React** 19.2.4 - UI framework (Create React App / react-scripts 5.0.1)
+- **React** 19.2.4 - UI framework (Create React App / `react-scripts` 5.0.1)
 - **Axios** 1.14.0 - HTTP client for API calls
 - **pdf.js** 5.6.205 - PDF parsing and rendering
 - **Mammoth** 1.8.0 - DOCX text extraction
-- **Plain CSS** (custom properties, no framework) - theming for dark/light mode
+- **Plain CSS** (custom properties, no framework) - Theming for dark/light mode support.
 
 ### Backend
 
-- **Node.js** (18+) - JavaScript runtime
+- **Node.js** (v24.x) - JavaScript runtime
 - **Express** 5.2.1 - Web framework
-- **Groq SDK** 1.5.0 - Llama 3.3 70B API integration
-- **Helmet** 8.0.0 - Security headers
+- **Groq SDK** 1.5.0 - Integration with Llama 3.3 70B API
+- **Helmet** 8.0.0 - Security headers for Express
 - **express-rate-limit** 7.5.0 - API rate limiting
-- **CORS** 2.8.6 - Cross-origin resource sharing
+- **CORS** 2.8.6 - Cross-origin resource sharing middleware
 - **dotenv** 17.4.0 - Environment variable management
 
 ## 📋 Prerequisites
 
-- **Node.js** (v18 or higher)
-- **npm** (v9 or higher)
-- **Groq API Key** — free, no card required ([get one here](https://console.groq.com/))
+- **Node.js**: v18 or higher
+- **npm**: v9 or higher
+- **Groq API Key**: Free, no card required. ([Get yours here](https://console.groq.com/))
 
 ## 🚀 Quick Start
 
@@ -53,65 +53,52 @@ npm run install:all
 
 This command installs dependencies for both the server and client applications.
 
-### 2. Configure Environment Variables (secure)
+### 2. Configure Environment Variables (Securely!)
 
-You can store the Groq API key either in `server/.env` (for local development) or as an environment variable in your shell/CI. Do NOT commit secrets into the repository.
+Store your `GROQ_API_KEY` either in `server/.env` (for local development) or as an environment variable in your deployment environment. **Never commit secrets into the repository.**
 
-Option A — copy the example file and edit it (local development):
+**Option A: Local Development (`server/.env`)**
 
 ```bash
 cp server/.env.example server/.env
-# then edit server/.env and set GROQ_API_KEY
+# Then edit server/.env and set GROQ_API_KEY
 ```
 
-Option B — set the variable in your shell (recommended):
+**Option B: Shell Export (Recommended for quick testing)**
 
-PowerShell (current shell only):
+*   **Bash / macOS / WSL:**
+    ```bash
+    export GROQ_API_KEY="YOUR_KEY"
+    npm start --prefix server
+    ```
+*   **PowerShell (current shell only):**
+    ```powershell
+    $env:GROQ_API_KEY="YOUR_KEY"
+    npm start --prefix server
+    ```
 
-```powershell
-$env:GROQ_API_KEY="YOUR_KEY"
-npm start --prefix server
-```
-
-PowerShell (persist across sessions):
-
-```powershell
-setx GROQ_API_KEY "YOUR_KEY"
-# Restart your terminal for the value to take effect
-```
-
-Bash / macOS / WSL:
-
-```bash
-export GROQ_API_KEY="YOUR_KEY"
-npm start --prefix server
-```
-
-CI / Production: Use your provider's secrets store (GitHub Actions secrets, Vercel/Netlify/Heroku config vars, AWS Secrets Manager, etc.).
+**Production / CI:** Use your platform's secrets management (e.g., GitHub Actions secrets, Vercel/Netlify/Heroku config vars).
 
 ### 3. Run the Application
 
-**Option A — Run separately in two terminals (recommended)**
+**Option A: Separate Terminals (Recommended)**
 
-Backend:
+*   **Backend:**
+    ```bash
+    npm start --prefix server
+    ```
+*   **Frontend:**
+    ```bash
+    npm start --prefix client
+    ```
 
-```bash
-npm start --prefix server
-```
-
-Frontend:
-
-```bash
-npm start --prefix client
-```
-
-**Option B — Run both concurrently (single command)**
+**Option B: Concurrent Execution**
 
 ```bash
 npm run dev
 ```
 
-If `npm run dev` shows `spawn cmd.exe ENOENT` on Windows in some shells, run the two commands separately as in Option A.
+*(Note: If `npm run dev` fails with `spawn cmd.exe ENOENT` on Windows, use Option A.)*
 
 ### 4. Access the Application
 
@@ -123,197 +110,126 @@ If `npm run dev` shows `spawn cmd.exe ENOENT` on Windows in some shells, run the
 ```
 ClearHire/
 ├── client/                      # React Frontend
-│   ├── public/                  # Static files
+│   ├── public/                  # Static assets
 │   ├── src/
-│   │   ├── Components/
-│   │   │   ├── HistoryPanel.js         # History management UI
-│   │   │   ├── ResumeUpload.js         # File upload component
-│   │   │   └── results/                # Analysis result components
-│   │   │       ├── AnalysisResult.js       # Main results display
-│   │   │       ├── ChecklistCard.js        # Checklist items
-│   │   │       ├── KeywordGroups.js        # Keyword analysis
-│   │   │       ├── SkillsMatchBar.js       # Skills matching UI
-│   │   │       ├── SectionFeedback.js      # Section-wise feedback
-│   │   │       ├── TopImprovements.js      # Key improvements
-│   │   │       ├── WeakBullets.js          # Weak bullet detection
-│   │   │       ├── FormattingWarnings.js   # Formatting issues
-│   │   │       └── ScoreCircle.js          # Score visualization
+│   │   ├── Components/          # Reusable UI components
+│   │   │   ├── HistoryPanel.js
+│   │   │   ├── ResumeUpload.js
+│   │   │   └── results/          # Analysis result components
+│   │   │       ├── AnalysisResult.js
+│   │   │       ├── ChecklistCard.js
+│   │   │       ├── KeywordGroups.js
+│   │   │       ├── SkillsMatchBar.js
+│   │   │       ├── SectionFeedback.js
+│   │   │       ├── TopImprovements.js
+│   │   │       ├── WeakBullets.js
+│   │   │       ├── FormattingWarnings.js
+│   │   │       └── ScoreCircle.js
 │   │   ├── pages/
-│   │   │   └── Home.js                 # Main page
+│   │   │   └── Home.js                 # Main application page
 │   │   ├── services/
-│   │   │   └── api.js                  # API service layer
+│   │   │   └── api.js                  # API interaction layer
 │   │   ├── utils/
-│   │   │   ├── buildMarkdownReport.js  # Report generation
-│   │   │   ├── historyStorage.js       # Local storage management
-│   │   │   ├── PdfParser.js            # PDF/DOCX text extraction
-│   │   │   └── sampleResume.js         # "Try a sample" demo data
+│   │   │   ├── buildMarkdownReport.js
+│   │   │   ├── historyStorage.js
+│   │   │   ├── PdfParser.js
+│   │   │   └── sampleResume.js
 │   │   ├── hooks/
-│   │   │   └── useTheme.js             # Theme management
+│   │   │   └── useTheme.js             # Theme management hook
 │   │   ├── App.js
 │   │   ├── index.js
 │   │   └── styles.css
 │   └── package.json
 │
 ├── server/                      # Express Backend
-│   ├── index.js                 # Main entry — API routes + serves client/build in production
-│   ├── .env                     # Environment variables (not in repo)
-│   ├── .env.example             # Environment template
+│   ├── index.js                 # API entry point & static server
+│   ├── .env                     # Environment variables (local, not committed)
+│   ├── .env.example             # Environment variable template
 │   ├── lib/
-│   │   └── normalizeAnalysis.js # Response normalization
+│   │   └── normalizeAnalysis.js # Normalizes AI response structure
 │   ├── prompts/
-│   │   ├── analyze.js           # Resume analysis prompt
-│   │   └── rewrite.js           # Content rewriting prompts
+│   │   ├── analyze.js           # Prompt generation for analysis
+│   │   └── rewrite.js           # Prompts for other AI tasks
 │   └── package.json
 │
-├── package.json                 # Root workspace configuration
+├── package.json                 # Root workspace config & scripts
 ├── LICENSE
 └── README.md                    # This file
 ```
 
 ## 🔌 API Endpoints
 
-### `POST /api/analyze`
+| Method | Path                  | Description                                  |
+|--------|-----------------------|----------------------------------------------|
+| `POST` | `/api/analyze`        | Analyzes resume text with optional job description. |
+| `POST` | `/api/rewrite-bullet` | Rewrites a specific resume bullet point.       |
+| `POST` | `/api/improve-summary`| Improves the professional summary section.     |
+| `POST` | `/api/interview-questions` | Generates personalized interview questions.    |
+| `POST` | `/api/cover-letter`   | Generates a tailored cover letter.           |
+| `GET`  | `/api/health`         | Returns server status and API key validation. |
 
-Analyzes a resume and returns detailed feedback.
-
-**Request Body:**
-
-```json
-{
-  "resumeText": "Full resume text content",
-  "jobDescription": "Job description (optional)"
-}
-```
-
-**Response:**
+**Example Request Body (`/api/analyze`)**
 
 ```json
 {
-  "score": 85,
-  "atsScore": 78,
-  "matchScore": 82,
-  "summary": "...",
-  "strengths": [],
-  "suggestions": [],
-  "weakBullets": []
+  "resumeText": "Full resume text content...",
+  "jobDescription": "Job description (optional)..."
 }
 ```
-
-### `POST /api/rewrite-bullet`
-
-Improves a specific resume bullet point.
-
-### `POST /api/improve-summary`
-
-Suggests improvements to the resume summary section.
-
-### `POST /api/interview-questions`
-
-Generates tailored interview questions based on the resume.
-
-### `POST /api/cover-letter`
-
-Generates a cover letter based on resume and job description.
-
-### `GET /api/health`
-
-Health check — returns model name and API key status.
 
 ## 🔐 Security & Secrets
 
-- **Rotate keys if exposed**: If an API key is accidentally committed, shared, or pasted anywhere outside your own machine, revoke it immediately in the [Groq console](https://console.groq.com/) and create a new key.
-- **Do not commit `.env`**: `server/.env` is present in `.gitignore` in this repo. Keep secrets out of version control.
-- **Use environment variables or secret managers**: For production, provide `GROQ_API_KEY` via your cloud provider or CI secrets.
-- **CLIENT_ORIGIN**: In production, set `CLIENT_ORIGIN` to your frontend URL. The server will reject requests with an undefined origin if this isn't set.
+- **API Key Rotation**: If your `GROQ_API_KEY` is accidentally exposed, revoke it immediately in the [Groq console](https://console.groq.com/) and generate a new one.
+- **`.env` File**: Ensure `server/.env` is included in your `.gitignore` to prevent committing secrets.
+- **Production Secrets**: Provide `GROQ_API_KEY` and `CLIENT_ORIGIN` via your hosting provider's environment variable or secrets management system.
 
 ## 🧪 Testing
 
-```bash
-npm test --prefix client    # React component / utility tests (Jest + React Testing Library)
-npm test --prefix server    # Server-side unit tests (Node's built-in test runner, no extra deps)
-```
+- **Client-side**: `npm test --prefix client` (React components, utilities using Jest & React Testing Library)
+- **Server-side**: `npm test --prefix server` (Node.js built-in test runner for backend logic)
 
 ## 📊 Available Scripts
 
-### Root Level
+### Root
 
-```bash
-npm run install:all     # Install dependencies for server and client
-npm run dev              # Run both server and client concurrently (separate dev servers)
-npm run build            # Install client deps and build client/ (for single-service deploys)
-npm start                 # Run the server, serving client/build if present
-```
+- `npm run install:all`: Installs dependencies for both server and client.
+- `npm run dev`: Runs both server and client development servers concurrently.
+- `npm run build`: Installs client dependencies and builds the client for production.
+- `npm start`: Runs the backend server, which can also serve the built client.
 
-### Server
+### Server Specific
 
-```bash
-npm start               # Start the backend server
-npm run dev             # Start backend (same as npm start)
-npm test                 # Run server-side unit tests
-```
+- `npm start` / `npm run dev`: Starts the backend server.
+- `npm test`: Runs server-side unit tests.
 
-### Client
+### Client Specific
 
-```bash
-npm start               # Start React development server
-npm run build           # Build for production
-npm test                # Run tests
-npm run eject           # Eject from Create React App (one-way operation)
-```
+- `npm start`: Starts the React development server.
+- `npm run build`: Creates an optimized production build in `client/build`.
+- `npm test`: Runs client-side tests.
 
 ## 🚀 Deployment
 
-As of this version, the Express server can serve the built React client itself.
-Single service deployment:
+This application supports single-service deployments where the Express server serves the built React client.
 
-### Option A — Render / Railway / Heroku (single service)
+### Option A: Single Service Hosting (Render, Railway, Heroku)
 
-These platforms run `npm install` then a build/start script — the root
-`package.json` is already set up for this:
+1.  **Build Command**: `npm run build` (installs deps and builds client).
+2.  **Start Command**: `npm start` (runs `node server/index.js`).
+3.  **Environment Variables**: Set `GROQ_API_KEY` and `CLIENT_ORIGIN` in your platform's dashboard.
 
-- **Build command**: `npm run build` (installs client deps and builds it)
-- **Start command**: `npm start` (runs `node server/index.js`, which serves
-  both the API and the built client)
-- Set `GROQ_API_KEY` and `CLIENT_ORIGIN` as environment variables in your
-  platform's dashboard — never in a committed file
-- Heroku specifically will run `heroku-postbuild` automatically, so no extra
-  config is needed beyond setting the env vars
+### Option B: Separate Frontend/Backend Hosting
 
-### Option B — Separate frontend/backend hosting
-
-If you'd rather host the client and server separately (e.g. client on
-Vercel/Netlify, server on Render):
-
-```bash
-npm run build --prefix client
-```
-
-This creates an optimized production build in `client/build` — deploy that
-directory as a static site. For the backend: set `NODE_ENV=production`,
-set `CLIENT_ORIGIN` to your frontend's URL (for CORS), and deploy
-`server/` to your preferred Node.js host.
+1.  **Build Client**: Run `npm run build --prefix client` to generate the `client/build` directory.
+2.  **Deploy Client**: Deploy the `client/build` folder as a static site (e.g., Vercel, Netlify).
+3.  **Deploy Server**: Deploy the `server/` directory as a Node.js application, ensuring `NODE_ENV=production` and `CLIENT_ORIGIN` are set correctly for CORS.
 
 ## 🐛 Troubleshooting
 
-Issue: `GROQ_API_KEY is not set`
-
-```text
-Check /api/health — if hasApiKey=false, set GROQ_API_KEY in your shell or server/.env
-```
-
-Issue: Port 3000 or 5000 already in use
-
-```bash
-PORT=3001 npm start --prefix client
-```
-
-Issue: `spawn cmd.exe ENOENT` when running `npm run dev` on Windows
-
-Run the server and client in separate terminals (see Option A above).
-
-Issue: PDF/DOCX parsing fails
-
-Try with a different file and check the browser console for parsing errors.
+- **`GROQ_API_KEY is not set`**: Verify the key in your `.env` file or environment variables. Check the `/api/health` endpoint.
+- **Port Conflict**: If ports 3000 or 5000 are in use, specify alternative ports: `PORT=3001 npm start --prefix client`.
+- **Windows `cmd.exe ENOENT`**: Use separate terminal windows for server and client (`npm start --prefix server` and `npm start --prefix client`).
+- **PDF/DOCX Parsing Issues**: Try different files; check browser console logs for specific errors.
 
 ## 📚 Additional Resources
 
@@ -324,8 +240,9 @@ Try with a different file and check the browser console for parsing errors.
 
 ## 📄 License
 
-ISC — see [LICENSE](./LICENSE).
+This project is licensed under the [ISC License](./LICENSE). © 2024 ClearHire
 
 ---
 
-Made with ❤️ — ClearHire, AI-powered resume analysis.
+---
+**<p align="center">Generated by [ReadmeCodeGen](https://www.readmecodegen.com/)</p>**
