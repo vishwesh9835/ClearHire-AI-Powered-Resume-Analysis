@@ -262,18 +262,8 @@ const ResumeUpload = ({ bootstrap }) => {
           </div>
 
           {inputMode === "file" ? (
-            <div
-              className={`upload-zone ${dragOver ? "drag-over" : ""}`}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onClick={() => !file && fileInputRef.current?.click()}
-              style={{ cursor: file ? "default" : "pointer" }}
-              role="button"
-              tabIndex={file ? -1 : 0}
-              aria-label="Drop zone for resume file"
-              onKeyDown={(e) => e.key === "Enter" && !file && fileInputRef.current?.click()}
-            >
+            <>
+              {/* Hidden file input always present */}
               <input
                 type="file"
                 accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -281,28 +271,42 @@ const ResumeUpload = ({ bootstrap }) => {
                 className="sr-only"
                 onChange={handleFileChange}
               />
-              <div className="upload-zone-icon" aria-hidden="true">
-                <IconUpload />
-              </div>
-              <div className="upload-zone-title">
-                {dragOver ? "Release to upload" : "Drop your resume here"}
-              </div>
-              <div className="upload-zone-subtitle">
-                PDF or DOCX · max 5 MB
-              </div>
+              {/* Only show the drop zone when no file is selected yet */}
               {!file && (
-                <button
-                  type="button"
-                  className="upload-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fileInputRef.current?.click();
-                  }}
+                <div
+                  className={`upload-zone ${dragOver ? "drag-over" : ""}`}
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{ cursor: "pointer" }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Drop zone for resume file"
+                  onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
                 >
-                  <IconUpload /> Choose file
-                </button>
+                  <div className="upload-zone-icon" aria-hidden="true">
+                    <IconUpload />
+                  </div>
+                  <div className="upload-zone-title">
+                    {dragOver ? "Release to upload" : "Drop your resume here"}
+                  </div>
+                  <div className="upload-zone-subtitle">
+                    PDF or DOCX · max 5 MB
+                  </div>
+                  <button
+                    type="button"
+                    className="upload-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fileInputRef.current?.click();
+                    }}
+                  >
+                    <IconUpload /> Choose file
+                  </button>
+                </div>
               )}
-            </div>
+            </>
           ) : (
             <div className="paste-panel">
               <label className="field-label" htmlFor="resume-paste">

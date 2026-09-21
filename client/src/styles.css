@@ -1476,21 +1476,26 @@ body::after {
   z-index: 90;
   display: flex;
   justify-content: center;
-  padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, rgba(18, 21, 27, 0.97) 50%, transparent);
+  align-items: center;
+  padding: 20px 24px calc(20px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(8, 15, 30, 0.98) 55%, transparent);
   pointer-events: none;
 }
 
 [data-theme="light"] .sticky-analyze-bar {
-  background: linear-gradient(to top, rgba(245, 245, 242, 0.98) 50%, transparent);
+  background: linear-gradient(to top, rgba(240, 244, 255, 0.99) 55%, transparent);
 }
 
 .sticky-analyze-bar .analyze-btn {
   pointer-events: auto;
-  min-width: 220px;
-  min-height: 52px;
-  font-size: 1rem;
-  border-radius: 16px;
+  min-width: 260px;
+  min-height: 58px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-radius: 100px;
+  padding: 0 40px;
+  box-shadow: 0 8px 40px rgba(13, 148, 136, 0.55), 0 0 0 1px rgba(13, 148, 136, 0.3);
 }
 
 .results-title {
