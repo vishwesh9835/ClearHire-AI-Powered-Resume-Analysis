@@ -238,9 +238,6 @@ This application supports single-service deployments where the Express server se
 - [Express.js Documentation](https://expressjs.com/)
 - [PDF.js Documentation](https://mozilla.github.io/pdf.js/)
 
-## 📄 License
-
-This project is licensed under the [ISC License](./LICENSE). © 2024 ClearHire
 
 ---
 
