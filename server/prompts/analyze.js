@@ -36,9 +36,29 @@ Resume text:
 ${resume}
 """
 
+SCORING RUBRIC — use the FULL 0-100 range. Do NOT default to 80-90 for every resume.
+
+Overall Resume Score ("score"):
+  0-39  = Poor. Major sections missing, no metrics, generic language, serious formatting issues.
+  40-54 = Below average. Some structure but weak bullets, no quantified achievements, limited keywords.
+  55-69 = Average. Decent structure, some metrics, but lacks polish, has generic phrases, or is poorly targeted.
+  70-79 = Good. Solid structure, some quantified impact, reasonable keywords. Minor improvements needed.
+  80-89 = Very good. Strong bullets with metrics, good keyword density, clear value proposition.
+  90-100 = Excellent. Outstanding quantified achievements, perfectly tailored, ATS-optimized, stands out.
+
+ATS Score ("atsScore"):
+  0-39  = Very poor ATS compatibility. Uses tables/columns/graphics, missing standard section headers, complex formatting.
+  40-54 = Poor. Has some ATS issues: inconsistent date formats, missing headers, or uncommon section names.
+  55-69 = Moderate. Mostly parseable but has some formatting quirks or missing keywords.
+  70-79 = Good. Clean format, standard sections, good keyword usage. Minor ATS concerns.
+  80-89 = Very good. ATS-friendly format, correct headers, strong keyword density.
+  90-100 = Excellent. Perfect ATS compatibility: plain text, standard sections, keyword-rich, no parsing obstacles.
+
+IMPORTANT: Most real-world resumes score between 45-75. Only exceptional resumes score above 85. Be critical and honest. A score of 85+ must be EARNED.
+
 Respond with a single JSON object only (no markdown fences). Use this schema:
 {
-  "score": number (0-100) overall resume quality,
+  "score": number (0-100) overall resume quality — follow the rubric above strictly,
   "summary": string (2-4 sentences),
   "skills": string[] (detected skills, up to 20),
   "strengths": string[] (3-6),
