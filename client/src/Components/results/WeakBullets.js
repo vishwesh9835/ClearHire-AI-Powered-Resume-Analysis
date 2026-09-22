@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Icon from "../Icon";
 import { rewriteBullet, getApiErrorMessage } from "../../services/api";
 
 const WeakBullets = ({ weakBullets, jobDescription }) => {
@@ -36,10 +37,12 @@ const WeakBullets = ({ weakBullets, jobDescription }) => {
   return (
     <div className="result-card result-card-full">
       <div className="card-header">
-        <div className="card-icon icon-orange">✎</div>
+        <div className="card-icon icon-orange">
+          <Icon name="edit" />
+        </div>
         <span className="card-title">Bullets to strengthen</span>
       </div>
-      <p className="weak-bullets-hint">
+      <p className="card-hint">
         Rewrite adds impact; review so it stays truthful.
       </p>
       {error && (

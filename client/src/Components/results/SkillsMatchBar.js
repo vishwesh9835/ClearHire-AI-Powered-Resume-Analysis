@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "../Icon";
 
 const SkillsMatchBar = ({ skillsMatch }) => {
   if (!skillsMatch) return null;
@@ -10,7 +11,9 @@ const SkillsMatchBar = ({ skillsMatch }) => {
   return (
     <div className="result-card result-card-full">
       <div className="card-header">
-        <div className="card-icon icon-blue">📈</div>
+        <div className="card-icon icon-blue">
+          <Icon name="bar-chart" />
+        </div>
         <span className="card-title">Skills match</span>
       </div>
       <div className="skills-match-meter" role="group" aria-label="Skills overlap">

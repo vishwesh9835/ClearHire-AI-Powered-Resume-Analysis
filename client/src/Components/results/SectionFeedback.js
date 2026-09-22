@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import Icon from "../Icon";
 
 const blocks = [
   { key: "summary", title: "Summary / profile" },
@@ -79,7 +80,9 @@ const SectionFeedback = ({ sectionFeedback }) => {
   return (
     <div className="result-card result-card-full section-feedback-card">
       <div className="card-header">
-        <div className="card-icon icon-purple">📑</div>
+        <div className="card-icon icon-purple">
+          <Icon name="layers" />
+        </div>
         <span className="card-title">Section-by-section feedback</span>
       </div>
       <div className="section-feedback-tabs" role="tablist" aria-label="Resume sections">

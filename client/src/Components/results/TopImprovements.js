@@ -1,11 +1,14 @@
 import React from "react";
+import Icon from "../Icon";
 
 const TopImprovements = ({ items }) => {
   if (!items || items.length === 0) return null;
   return (
     <div className="result-card result-card-full top-improvements-card">
       <div className="card-header">
-        <div className="card-icon icon-orange">⚡</div>
+        <div className="card-icon icon-orange">
+          <Icon name="zap" />
+        </div>
         <span className="card-title">Top 3 fastest improvements</span>
       </div>
       <ol className="top-improvements-list">

@@ -11,7 +11,6 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.14.0",
-    "clearhire": "file:..",
     "mammoth": "^1.8.0",
     "pdfjs-dist": "^5.6.205",
     "react": "^19.2.4",
@@ -20,9 +19,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "prestart": "node scripts/copy-pdf-worker.js",
     "start": "react-scripts start",
+    "prebuild": "node scripts/copy-pdf-worker.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import Icon from "../Icon";
 import { getInterviewQuestions, getApiErrorMessage } from "../../services/api";
 
 const CATEGORIES = [
-  { key: "behavioral", label: "Behavioral", icon: "◈", color: "icon-blue" },
-  { key: "technical", label: "Technical", icon: "◇", color: "icon-cyan" },
-  { key: "roleSpecific", label: "Role-specific", icon: "◎", color: "icon-purple" },
+  { key: "behavioral", label: "Behavioral", iconName: "sparkle", color: "icon-blue" },
+  { key: "technical", label: "Technical", iconName: "diamond", color: "icon-cyan" },
+  { key: "roleSpecific", label: "Role-specific", iconName: "target", color: "icon-purple" },
 ];
 
 const InterviewQuestions = ({ resumeText, jobDescription }) => {
@@ -53,7 +54,9 @@ const InterviewQuestions = ({ resumeText, jobDescription }) => {
   return (
     <div className="result-card result-card-full interview-card">
       <div className="card-header">
-        <div className="card-icon icon-purple">❓</div>
+        <div className="card-icon icon-purple">
+          <Icon name="help-circle" />
+        </div>
         <span className="card-title">Interview preparation</span>
         {data && (
           <button
@@ -68,7 +71,7 @@ const InterviewQuestions = ({ resumeText, jobDescription }) => {
 
       {!data && !loading && (
         <>
-          <p className="improve-summary-hint">
+          <p className="card-hint">
             Generate {jobDescription ? "role-tailored" : "resume-based"} interview questions
             to prepare for your next interview.
           </p>
@@ -97,17 +100,19 @@ const InterviewQuestions = ({ resumeText, jobDescription }) => {
 
       {data && (
         <>
-          <p className="improve-summary-hint">
+          <p className="card-hint">
             {totalQuestions} questions generated. Prepare answers using the STAR method
             (Situation, Task, Action, Result).
           </p>
 
           <div className="interview-categories">
-            {CATEGORIES.map(({ key, label, icon, color }) =>
+            {CATEGORIES.map(({ key, label, iconName, color }) =>
               data[key]?.length ? (
                 <div key={key} className="interview-category">
                   <div className="card-header">
-                    <div className={`card-icon ${color}`}>{icon}</div>
+                    <div className={`card-icon ${color}`}>
+                      <Icon name={iconName} size={18} />
+                    </div>
                     <span className="card-subtitle">{label}</span>
                   </div>
                   <ol className="interview-questions-list">
@@ -125,7 +130,9 @@ const InterviewQuestions = ({ resumeText, jobDescription }) => {
           {data.tips?.length > 0 && (
             <div className="interview-tips">
               <div className="card-header">
-                <div className="card-icon icon-green">✦</div>
+                <div className="card-icon icon-green">
+                  <Icon name="sparkle" size={18} />
+                </div>
                 <span className="card-subtitle">Preparation tips</span>
               </div>
               <ul className="result-list">

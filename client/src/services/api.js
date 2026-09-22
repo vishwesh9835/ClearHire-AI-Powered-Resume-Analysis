@@ -1,9 +1,31 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+/**
+ * Resolves the API base URL for the current environment.
+ *
+ * Development needs an absolute origin because the CRA dev server (:3000) and
+ * the API (:5000) are different ports. A production build, however, is served
+ * by the very same Express process that hosts /api (see server/index.js and
+ * vercel.json) — so hardcoding http://localhost:5000 there pointed every
+ * visitor's browser at their OWN machine and broke the deployed app entirely.
+ * Production therefore uses a same-origin relative path.
+ *
+ * REACT_APP_API_URL still wins when set, which is what split frontend/backend
+ * deployments use.
+ */
+const DEV_API_ORIGIN = "http://localhost:5000";
+
+function resolveBaseUrl() {
+  const configured = (process.env.REACT_APP_API_URL || "").trim();
+  if (configured) return configured.replace(/\/+$/, "");
+  if (process.env.NODE_ENV === "production") return "/api";
+  return `${DEV_API_ORIGIN}/api`;
+}
+
+export const API_BASE_URL = resolveBaseUrl();
 
 const client = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   timeout: 120000,
   headers: { "Content-Type": "application/json" },
 });
@@ -98,6 +120,14 @@ export async function rewriteBullet(bulletText, options = {}) {
   return data;
 }
 
+export async function improveSummary(summaryText, options = {}) {
+  const { jobDescription = "" } = options;
+  const { data } = await client.post("/improve-summary", {
+    summaryText,
+    jobDescription: jobDescription || undefined,
+  });
+  return data;
+}
 
 export async function getInterviewQuestions(resumeText, options = {}) {
   const { jobDescription = "" } = options;
@@ -117,4 +147,3 @@ export async function generateCoverLetter(resumeText, options = {}) {
   });
   return data;
 }
-

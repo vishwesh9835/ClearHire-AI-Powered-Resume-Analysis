@@ -1,11 +1,14 @@
 import React from "react";
+import Icon from "../Icon";
 
 const FormattingWarnings = ({ items }) => {
   if (!items || items.length === 0) return null;
   return (
     <div className="result-card">
       <div className="card-header">
-        <div className="card-icon icon-cyan">📐</div>
+        <div className="card-icon icon-cyan">
+          <Icon name="layout" />
+        </div>
         <span className="card-title">ATS formatting notes</span>
       </div>
       <ul className="result-list">

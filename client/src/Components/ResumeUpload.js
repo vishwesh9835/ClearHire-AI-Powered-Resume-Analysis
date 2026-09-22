@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { extractTextFromFile } from "../utils/PdfParser";
+import { extractTextFromFile, detectFileKind } from "../utils/PdfParser";
+import Icon from "./Icon";
 import { analyzeResume, getApiErrorMessage } from "../services/api";
 import { saveHistoryEntry } from "../utils/historyStorage";
 import { SAMPLE_RESUME, SAMPLE_JOB_DESCRIPTION } from "../utils/sampleResume";
@@ -9,47 +10,8 @@ const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const MIN_TEXT_CHARS = 50;
 const MAX_PASTE_CHARS = 12000;
 
-const ACCEPTED_TYPES = [
-  "application/pdf",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
 
-/* ── SVG Icons ── */
-const IconUpload = () => (
-  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-    <polyline points="17 8 12 3 7 8" />
-    <line x1="12" y1="3" x2="12" y2="15" />
-  </svg>
-);
 
-const IconFile = ({ isPdf }) => isPdf ? (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-    <polyline points="14 2 14 8 20 8" />
-    <line x1="9" y1="13" x2="15" y2="13" />
-    <line x1="9" y1="17" x2="15" y2="17" />
-    <line x1="9" y1="9" x2="11" y2="9" />
-  </svg>
-) : (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-    <polyline points="14 2 14 8 20 8" />
-    <path d="M16 13H8M16 17H8M10 9H8" />
-  </svg>
-);
-
-const IconSample = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8" />
-  </svg>
-);
-
-const IconStar = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-  </svg>
-);
 
 const LOADING_MESSAGES = [
   "Extracting resume content…",
@@ -80,9 +42,10 @@ const ResumeUpload = ({ bootstrap }) => {
     setResult(bootstrap.analysis);
     setJobDescription(bootstrap.jobDescription || "");
     setTailorMode(Boolean(bootstrap.tailorMode));
+    setResumeText(bootstrap.resumeText || "");
     setError(null);
     setFile(null);
-    setPastedText("");
+    setPastedText(bootstrap.resumeText || "");
     if (fileInputRef.current) fileInputRef.current.value = "";
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bootstrap?.id]);
@@ -106,11 +69,14 @@ const ResumeUpload = ({ bootstrap }) => {
       setError("File must be under 5 MB.");
       return;
     }
-    const isDocx = f.name.toLowerCase().endsWith(".docx");
-    // Extension check covers DOCX uploads where the OS/browser doesn't
-    // report the expected MIME type; ACCEPTED_TYPES is the source of truth
-    // for what the type-based check accepts.
-    if (!ACCEPTED_TYPES.includes(f.type) && !isDocx) {
+    // Shared with the parser so the UI and the extractor can never disagree
+    // about what counts as a supported file.
+    const kind = detectFileKind(f);
+    if (kind === "unsupported-doc") {
+      setError("Legacy .doc files aren't supported. Save it as .docx or PDF, or use paste text.");
+      return;
+    }
+    if (!kind) {
       setError("Only PDF and DOCX (Word) files are supported.");
       return;
     }
@@ -177,7 +143,7 @@ const ResumeUpload = ({ bootstrap }) => {
         savedAt: new Date().toISOString(),
         preview: text.slice(0, 120),
         scores: { score: analysis.score, ats: analysis.atsScore, match: analysis.matchScore },
-        payload: { analysis, jobDescription, tailorMode },
+        payload: { analysis, jobDescription, tailorMode, resumeText: text },
       });
     } catch (err) {
       setError(getApiErrorMessage(err));
@@ -224,7 +190,7 @@ const ResumeUpload = ({ bootstrap }) => {
       ? pastedText.trim().length >= MIN_TEXT_CHARS
       : Boolean(file));
 
-  const isPdf = file?.type === "application/pdf";
+  const isPdf = detectFileKind(file) === "pdf";
 
   return (
     <div className="resume-upload-root">
@@ -240,7 +206,7 @@ const ResumeUpload = ({ bootstrap }) => {
               onClick={handleUseSample}
               title="Fill in a fictional sample resume and job description"
             >
-              <IconSample /> Try a sample resume
+              <Icon name="sparkle" size={14} /> Try a sample resume
             </button>
           </div>
 
@@ -250,14 +216,16 @@ const ResumeUpload = ({ bootstrap }) => {
               className={`mode-btn ${inputMode === "file" ? "active" : ""}`}
               onClick={() => { setInputMode("file"); setError(null); }}
             >
-              📎 Upload PDF / DOCX
+              <Icon name="file-text" size={16} />
+              <span>Upload PDF / DOCX</span>
             </button>
             <button
               type="button"
               className={`mode-btn ${inputMode === "paste" ? "active" : ""}`}
               onClick={() => { setInputMode("paste"); setError(null); }}
             >
-              📋 Paste text
+              <Icon name="clipboard" size={16} />
+              <span>Paste text</span>
             </button>
           </div>
 
@@ -286,7 +254,7 @@ const ResumeUpload = ({ bootstrap }) => {
                   onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
                 >
                   <div className="upload-zone-icon" aria-hidden="true">
-                    <IconUpload />
+                    <Icon name="upload" size={36} />
                   </div>
                   <div className="upload-zone-title">
                     {dragOver ? "Release to upload" : "Drop your resume here"}
@@ -302,7 +270,7 @@ const ResumeUpload = ({ bootstrap }) => {
                       fileInputRef.current?.click();
                     }}
                   >
-                    <IconUpload /> Choose file
+                    <Icon name="upload" size={16} /> Choose file
                   </button>
                 </div>
               )}
@@ -337,7 +305,7 @@ const ResumeUpload = ({ bootstrap }) => {
           {file && inputMode === "file" && (
             <div className="file-selected-banner">
               <div className="file-icon-box" aria-hidden="true">
-                <IconFile isPdf={isPdf} />
+                <Icon name="file-text" size={22} />
               </div>
               <div className="file-details">
                 <div className="file-name">{file.name}</div>
@@ -391,7 +359,9 @@ const ResumeUpload = ({ bootstrap }) => {
 
       {error && (
         <div className="error-card" role="alert">
-          <div className="error-icon" aria-hidden="true">⚠</div>
+          <div className="error-icon" aria-hidden="true">
+            <Icon name="alert-triangle" size={22} />
+          </div>
           <div>
             <div className="error-title">Something went wrong</div>
             <div className="error-msg">
@@ -410,7 +380,7 @@ const ResumeUpload = ({ bootstrap }) => {
             <span className="loader-dot" />
           </div>
           <div className="loader-text">{loadingMsg}</div>
-          <div className="loader-subtext">This may take up to a minute — Llama is thinking.</div>
+          <div className="loader-subtext">This may take up to a minute.</div>
         </div>
       )}
 
@@ -436,7 +406,7 @@ const ResumeUpload = ({ bootstrap }) => {
             id="analyze-resume-btn"
             title={!canAnalyze ? (inputMode === "file" ? "Upload a file first" : `Paste at least ${MIN_TEXT_CHARS} characters`) : ""}
           >
-            <IconStar /> Run analysis
+            <Icon name="star" size={16} /> Run analysis
           </button>
         </div>
       )}

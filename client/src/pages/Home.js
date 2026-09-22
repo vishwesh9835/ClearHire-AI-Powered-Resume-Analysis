@@ -1,59 +1,72 @@
 import React, { useState, useCallback } from "react";
 import ResumeUpload from "../Components/ResumeUpload";
 import HistoryPanel from "../Components/HistoryPanel";
+import Icon from "../Components/Icon";
 import { useTheme } from "../hooks/useTheme";
 
 const FEATURES = [
-  { label: "ATS Score", color: "chip-blue" },
-  { label: "Job Match %", color: "chip-cyan" },
-  { label: "Weak Bullet Rewriter", color: "chip-purple" },
-  { label: "Cover Letter AI", color: "chip-green" },
-  { label: "Interview Questions", color: "chip-orange" },
-  { label: "Section Feedback", color: "chip-blue" },
-  { label: "Keyword Gaps", color: "chip-cyan" },
+  { label: "ATS Score", color: "chip-teal" },
+  { label: "Job Match %", color: "chip-indigo" },
+  { label: "Weak Bullet Rewriter", color: "chip-violet" },
+  { label: "Cover Letter AI", color: "chip-emerald" },
+  { label: "Interview Questions", color: "chip-amber" },
+  { label: "Section Feedback", color: "chip-indigo" },
+  { label: "Keyword Gaps", color: "chip-teal" },
 ];
 
-const PrivacyModal = ({ onClose }) => (
-  <div
-    className="modal-overlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="privacy-modal-title"
-    onClick={onClose}
-  >
-    <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-title" id="privacy-modal-title">
-        <span>🔒</span> Privacy
+const PrivacyModal = ({ onClose }) => {
+  // Escape closes the dialog, matching the backdrop click.
+  React.useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
+  return (
+    <div
+      className="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="privacy-modal-title"
+      onClick={onClose}
+    >
+      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-title" id="privacy-modal-title">
+          <Icon name="lock" size={18} />
+          <span>Privacy</span>
+        </div>
+        <div className="modal-body">
+          <p>
+            <strong>What we send:</strong> Your resume text and optional job description
+            are sent to the Groq API for analysis. No files are stored on our servers.
+          </p>
+          <p>
+            <strong>Local history:</strong> Analysis results can be saved to your browser's
+            <code> localStorage</code>. This data stays local to your device.
+          </p>
+          <p>
+            <strong>API keys:</strong> The Groq API key is stored only on the backend server
+            and is never exposed to the browser.
+          </p>
+          <p>
+            <strong>No tracking:</strong> We do not use analytics, cookies, or any third-party
+            tracking services.
+          </p>
+        </div>
+        <button
+          type="button"
+          className="btn-primary modal-close"
+          onClick={onClose}
+          autoFocus
+        >
+          Got it
+        </button>
       </div>
-      <div className="modal-body">
-        <p>
-          <strong>What we send:</strong> Your resume text and optional job description
-          are sent to Groq's API (running Llama 3.3) for analysis. No files are stored on our servers.
-        </p>
-        <p>
-          <strong>Local history:</strong> Analysis results can be saved to your browser's
-          <code> localStorage</code>. This data stays local to your device.
-        </p>
-        <p>
-          <strong>API keys:</strong> The Groq API key is stored only on the backend server
-          and is never exposed to the browser.
-        </p>
-        <p>
-          <strong>No tracking:</strong> We do not use analytics, cookies, or any third-party
-          tracking services.
-        </p>
-      </div>
-      <button
-        type="button"
-        className="btn-primary modal-close"
-        onClick={onClose}
-        autoFocus
-      >
-        Got it
-      </button>
     </div>
-  </div>
-);
+  );
+};
 
 const Home = () => {
   const { theme, toggle } = useTheme();
@@ -69,6 +82,7 @@ const Home = () => {
       analysis: p.analysis,
       jobDescription: p.jobDescription || "",
       tailorMode: Boolean(p.tailorMode),
+      resumeText: p.resumeText || "",
     });
     setHistoryOpen(false);
   }, []);
@@ -77,7 +91,9 @@ const Home = () => {
     <div className="app-wrapper">
       <nav className="navbar no-print">
         <div className="navbar-brand">
-          <div className="navbar-logo-icon" aria-hidden="true">✓</div>
+          <div className="navbar-logo-icon" aria-hidden="true">
+            <Icon name="check-circle" size={19} strokeWidth={2.4} />
+          </div>
           <span className="navbar-brand-text">ClearHire</span>
         </div>
         <div className="navbar-actions">
@@ -87,7 +103,8 @@ const Home = () => {
             onClick={() => setHistoryOpen(true)}
             aria-label="Open analysis history"
           >
-            History
+            <Icon name="history" size={15} />
+            <span>History</span>
           </button>
           <button
             type="button"
@@ -95,7 +112,8 @@ const Home = () => {
             onClick={toggle}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
           >
-            {theme === "dark" ? "☀ Light" : "☾ Dark"}
+            <Icon name={theme === "dark" ? "sun" : "moon"} size={15} />
+            <span>{theme === "dark" ? "Light" : "Dark"}</span>
           </button>
           <span className="navbar-badge">AI-assisted</span>
         </div>

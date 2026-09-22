@@ -8,6 +8,7 @@ server/node_modules/
 # ── Production builds ─────────────────────────────────────────────────────────
 build/
 client/build/
+client/public/pdf.worker.min.mjs
 
 # ── Secrets & local env ───────────────────────────────────────────────────────
 .env

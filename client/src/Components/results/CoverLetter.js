@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Icon from "../Icon";
 import { generateCoverLetter, getApiErrorMessage } from "../../services/api";
 
 const TONES = [
@@ -45,7 +46,9 @@ const CoverLetter = ({ resumeText, jobDescription }) => {
   return (
     <div className="result-card result-card-full cover-letter-card">
       <div className="card-header">
-        <div className="card-icon icon-blue">✉</div>
+        <div className="card-icon icon-blue">
+          <Icon name="mail" />
+        </div>
         <span className="card-title">Cover letter generator</span>
         {data && (
           <button
@@ -60,7 +63,7 @@ const CoverLetter = ({ resumeText, jobDescription }) => {
 
       {!data && (
         <>
-          <p className="improve-summary-hint">
+          <p className="card-hint">
             Generate a tailored cover letter from your resume
             {jobDescription ? " and the job description" : ""}.
           </p>

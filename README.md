@@ -1,245 +1,231 @@
-# ClearHire — AI-Powered Resume Analysis 🚀
+# ClearHire — AI-Powered Resume Analysis & Career Intelligence 🚀
 
-AI-powered resume analysis using Groq's Llama 3.3. Upload a resume (PDF or DOCX), get section-by-section feedback, keyword matching, summary rewrites, suggested bullet improvements, and a downloadable report.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-19.2-61dafb.svg?logo=react&logoColor=black)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-24.x-339933.svg?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-5.2-000000.svg?logo=express&logoColor=white)](https://expressjs.com/)
+[![Groq](https://img.shields.io/badge/AI-Groq%20Llama%203.3-f55036.svg)](https://console.groq.com/)
+
+**ClearHire** is a modern, privacy-first career intelligence platform that gives job seekers recruiter-grade resume critiques, ATS compatibility evaluations, tailored keyword gap analysis, AI bullet enhancements, summary rewrites, interview preparation, and custom cover letters in seconds.
+
+Powered by Groq's high-throughput Llama 3.3 70B inference engine.
+
+---
 
 ## 🎯 Features
 
-- **Resume Upload & Parsing**: Upload resumes as PDF or DOCX with automatic text extraction.
-- **AI-Powered Analysis**: Leverages Groq's Llama 3.3 for comprehensive resume content analysis.
-- **Skills Matching**: Identifies and matches skills against job requirements.
-- **Keyword Analysis**: Groups and analyzes keyword density and relevance.
-- **Formatting Feedback**: Detects formatting issues and provides actionable suggestions.
-- **Weak Bullet Optimization**: Identifies weak resume bullets and suggests improvements.
-- **Summary Rewriting**: Generates AI-powered improvements for resume summaries.
-- **Score Visualization**: Provides a visual breakdown of scores across multiple categories.
-- **Report Generation**: Exports analysis results as downloadable Markdown reports.
-- **Analysis History**: Tracks and manages previous resume analyses locally in the browser.
-- **Sample Resume Demo**: One-click functionality to populate with a fictional resume and job description for immediate analysis.
-- **Keyboard Shortcut**: Analyze with `Ctrl/Cmd+Enter` while typing.
+- **Multi-Format Resume Ingestion**: Upload text-based PDF or DOCX files with automatic layout-aware text extraction, or paste plain text directly.
+- **ATS Readiness Scoring & Rubric**: Strict 0–100 ATS scoring with checks for parsing obstacles (tables, multi-column layouts, unconventional headers, and keyword densities).
+- **Targeted Job Match & Keyword Gap Analysis**: Compare resumes against job descriptions to discover missing technical skills, tools & platforms, and soft skills.
+- **Section-by-Section Feedback**: Structured evaluation of Summary, Work Experience, Education, and Projects with specific strengths and areas for improvement.
+- **Weak Bullet Point Rewriter**: Identifies underperforming resume bullets (lacking metrics or action verbs) and rewrites them for measurable impact.
+- **Summary Improver**: Automatically extracts the candidate's existing summary or accepts pasted text, tightening it into 3–5 high-impact opening lines.
+- **Personalized Interview Preparation**: Generates STAR-method behavioral questions, technical probes, role-specific questions, and personalized prep tips.
+- **Tailored Cover Letter Generator**: Writes natural, human-sounding cover letters tailored to the target job description across multiple selectable tones (*Professional*, *Enthusiastic*, *Concise*).
+- **Fast Same-Origin PDF Processing**: Zero external CDN runtime dependencies — PDF.js web workers are automatically vendored at build time to comply with strict Content Security Policies.
+- **Local History & Markdown Export**: Save up to 20 past runs in browser `localStorage` and copy full Markdown audit reports to your clipboard with a single click.
+- **Clean Design System**: Premium dark/light theme switching with custom CSS design tokens, smooth canvas-rendered score animations, and stroke icon graphics.
+- **Privacy by Default**: Resume files are never stored on any server. Analysis runs ephemerally, API keys stay on the backend, and history remains strictly local.
+
+---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-
-- **React** 19.2.4 - UI framework (Create React App / `react-scripts` 5.0.1)
-- **Axios** 1.14.0 - HTTP client for API calls
-- **pdf.js** 5.6.205 - PDF parsing and rendering
-- **Mammoth** 1.8.0 - DOCX text extraction
-- **Plain CSS** (custom properties, no framework) - Theming for dark/light mode support.
+- **React 19.2** — Modern component architecture and reactive state management.
+- **PDF.js (`pdfjs-dist`) 5.7** — Client-side PDF text extraction with custom baseline-grouping algorithms that preserve layout and token boundaries.
+- **Mammoth.js** — Word (.docx) raw document text extractor.
+- **Axios** — Robust API client with environment-aware baseURL resolution.
+- **Vanilla CSS** — Custom design tokens, dark/light theme variables, micro-animations, and zero framework overhead.
+- **Jest & React Testing Library** — Comprehensive frontend unit and component test suites.
 
 ### Backend
+- **Node.js (v20+ / v24.x)** — High-performance JavaScript runtime.
+- **Express 5.2** — Next-generation HTTP routing framework.
+- **Groq SDK 1.5** — Ultra-fast inference with intelligent fallback model chaining (`groq/compound`, `llama-3.3-70b-versatile`, `llama3-70b-8192`).
+- **Helmet 8.0** — Advanced HTTP security headers including strict Content-Security-Policy (CSP).
+- **express-rate-limit 7.5** — Tiered rate limiting protecting AI endpoints against abuse.
+- **CORS 2.8** — Configurable origin protection for standalone or decoupled architectures.
+- **Node Test Runner (`node:test`)** — Built-in native unit test runner.
 
-- **Node.js** (v24.x) - JavaScript runtime
-- **Express** 5.2.1 - Web framework
-- **Groq SDK** 1.5.0 - Integration with Llama 3.3 70B API
-- **Helmet** 8.0.0 - Security headers for Express
-- **express-rate-limit** 7.5.0 - API rate limiting
-- **CORS** 2.8.6 - Cross-origin resource sharing middleware
-- **dotenv** 17.4.0 - Environment variable management
+---
 
-## 📋 Prerequisites
+## 📁 Repository Structure
 
-- **Node.js**: v18 or higher
-- **npm**: v9 or higher
-- **Groq API Key**: Free, no card required. ([Get yours here](https://console.groq.com/))
+```text
+ClearHire/
+├── .gitignore                     # Git ignore rules (deps, builds, env, vendored workers)
+├── LICENSE                        # MIT License
+├── Procfile                       # Process configuration for Heroku/Dokku
+├── README.md                      # Project documentation
+├── package.json                   # Root workspace scripts & dev dependencies
+├── vercel.json                    # Vercel serverless routing & build configuration
+│
+├── api/                           # Serverless Adapter
+│   └── index.js                   # Vercel serverless export for Express backend
+│
+├── client/                        # React Frontend Application
+│   ├── public/                    # Static public assets (HTML, favicon, manifest)
+│   ├── scripts/
+│   │   └── copy-pdf-worker.js     # Build hook to vendor pdf.worker.min.mjs
+│   ├── src/
+│   │   ├── Components/            # Reusable UI components
+│   │   │   ├── ErrorBoundary.js   # Client error boundary
+│   │   │   ├── HistoryPanel.js    # Local analysis history drawer
+│   │   │   ├── Icon.js            # Unified SVG icon library
+│   │   │   ├── ResumeUpload.js    # Primary drag-and-drop & paste interface
+│   │   │   └── results/           # Analysis presentation components
+│   │   │       ├── AnalysisResult.js
+│   │   │       ├── ChecklistCard.js
+│   │   │       ├── CoverLetter.js
+│   │   │       ├── FormattingWarnings.js
+│   │   │       ├── InterviewQuestions.js
+│   │   │       ├── KeywordGroups.js
+│   │   │       ├── ScoreCircle.js
+│   │   │       ├── SectionFeedback.js
+│   │   │       ├── SkillsMatchBar.js
+│   │   │       ├── StickyReportActions.js
+│   │   │       ├── SummaryImprover.js
+│   │   │       ├── TopImprovements.js
+│   │   │       └── WeakBullets.js
+│   │   ├── hooks/
+│   │   │   └── useTheme.js        # Theme state & localStorage synchronization
+│   │   ├── pages/
+│   │   │   └── Home.js            # Main view & header
+│   │   ├── services/
+│   │   │   └── api.js             # Client API service
+│   │   ├── utils/
+│   │   │   ├── buildMarkdownReport.js
+│   │   │   ├── historyStorage.js
+│   │   │   ├── pdfTextExtraction.js
+│   │   │   ├── PdfParser.js
+│   │   │   └── sampleResume.js
+│   │   ├── App.js
+│   │   ├── index.css
+│   │   ├── index.js
+│   │   └── styles.css             # Unified application styles & design tokens
+│   └── package.json
+│
+└── server/                        # Express Backend Application
+    ├── lib/
+    │   ├── normalizeAnalysis.js   # Response sanitization, clamping & schema normalization
+    │   └── normalizeAnalysis.test.js
+    ├── prompts/
+    │   ├── analyze.js             # Structured prompt for full resume review
+    │   └── rewrite.js             # Prompts for bullets, summaries, questions & letters
+    ├── index.js                   # Express server, route definitions, fallbacks & static SPA server
+    ├── .env.example               # Environment variables template
+    └── package.json
+```
 
-## 🚀 Quick Start
+---
 
-### 1. Install Dependencies
+## ⚡ Quick Start
 
+### 1. Prerequisites
+- **Node.js**: v18.0.0 or higher (v24.x recommended)
+- **npm**: v9.0.0 or higher
+- **Groq API Key**: Free API key with no credit card required. Obtain one at [console.groq.com](https://console.groq.com/).
+
+### 2. Installation
+Clone the repository and install all dependencies across workspace packages:
 ```bash
+git clone https://github.com/vishwesh9835/ClearHire-AI-Powered-Resume-Analysis.git
+cd ClearHire
 npm run install:all
 ```
 
-This command installs dependencies for both the server and client applications.
-
-### 2. Configure Environment Variables (Securely!)
-
-Store your `GROQ_API_KEY` either in `server/.env` (for local development) or as an environment variable in your deployment environment. **Never commit secrets into the repository.**
-
-**Option A: Local Development (`server/.env`)**
-
+### 3. Environment Configuration
+Create your server environment file from the template:
 ```bash
 cp server/.env.example server/.env
-# Then edit server/.env and set GROQ_API_KEY
 ```
 
-**Option B: Shell Export (Recommended for quick testing)**
+Open `server/.env` and set your key:
+```env
+PORT=5000
+NODE_ENV=development
+GROQ_API_KEY=gsk_your_groq_api_key_here
+CLIENT_ORIGIN=http://localhost:3000
+```
 
-*   **Bash / macOS / WSL:**
-    ```bash
-    export GROQ_API_KEY="YOUR_KEY"
-    npm start --prefix server
-    ```
-*   **PowerShell (current shell only):**
-    ```powershell
-    $env:GROQ_API_KEY="YOUR_KEY"
-    npm start --prefix server
-    ```
-
-**Production / CI:** Use your platform's secrets management (e.g., GitHub Actions secrets, Vercel/Netlify/Heroku config vars).
-
-### 3. Run the Application
-
-**Option A: Separate Terminals (Recommended)**
-
-*   **Backend:**
-    ```bash
-    npm start --prefix server
-    ```
-*   **Frontend:**
-    ```bash
-    npm start --prefix client
-    ```
-
-**Option B: Concurrent Execution**
-
+### 4. Running the Development Server
+Run backend and frontend concurrently:
 ```bash
 npm run dev
 ```
 
-*(Note: If `npm run dev` fails with `spawn cmd.exe ENOENT` on Windows, use Option A.)*
+Alternatively, run each in separate terminals:
+```bash
+# Terminal 1: Backend API (:5000)
+npm start --prefix server
 
-### 4. Access the Application
-
-- **Frontend**: [http://localhost:3000](http://localhost:3000)
-- **Backend API**: [http://localhost:5000](http://localhost:5000)
-
-## 📁 Project Structure
-
-```
-ClearHire/
-├── client/                      # React Frontend
-│   ├── public/                  # Static assets
-│   ├── src/
-│   │   ├── Components/          # Reusable UI components
-│   │   │   ├── HistoryPanel.js
-│   │   │   ├── ResumeUpload.js
-│   │   │   └── results/          # Analysis result components
-│   │   │       ├── AnalysisResult.js
-│   │   │       ├── ChecklistCard.js
-│   │   │       ├── KeywordGroups.js
-│   │   │       ├── SkillsMatchBar.js
-│   │   │       ├── SectionFeedback.js
-│   │   │       ├── TopImprovements.js
-│   │   │       ├── WeakBullets.js
-│   │   │       ├── FormattingWarnings.js
-│   │   │       └── ScoreCircle.js
-│   │   ├── pages/
-│   │   │   └── Home.js                 # Main application page
-│   │   ├── services/
-│   │   │   └── api.js                  # API interaction layer
-│   │   ├── utils/
-│   │   │   ├── buildMarkdownReport.js
-│   │   │   ├── historyStorage.js
-│   │   │   ├── PdfParser.js
-│   │   │   └── sampleResume.js
-│   │   ├── hooks/
-│   │   │   └── useTheme.js             # Theme management hook
-│   │   ├── App.js
-│   │   ├── index.js
-│   │   └── styles.css
-│   └── package.json
-│
-├── server/                      # Express Backend
-│   ├── index.js                 # API entry point & static server
-│   ├── .env                     # Environment variables (local, not committed)
-│   ├── .env.example             # Environment variable template
-│   ├── lib/
-│   │   └── normalizeAnalysis.js # Normalizes AI response structure
-│   ├── prompts/
-│   │   ├── analyze.js           # Prompt generation for analysis
-│   │   └── rewrite.js           # Prompts for other AI tasks
-│   └── package.json
-│
-├── package.json                 # Root workspace config & scripts
-├── LICENSE
-└── README.md                    # This file
+# Terminal 2: React Dev Server (:3000)
+npm start --prefix client
 ```
 
-## 🔌 API Endpoints
+Navigate to **http://localhost:3000** in your browser.
 
-| Method | Path                  | Description                                  |
-|--------|-----------------------|----------------------------------------------|
-| `POST` | `/api/analyze`        | Analyzes resume text with optional job description. |
-| `POST` | `/api/rewrite-bullet` | Rewrites a specific resume bullet point.       |
-| `POST` | `/api/improve-summary`| Improves the professional summary section.     |
-| `POST` | `/api/interview-questions` | Generates personalized interview questions.    |
-| `POST` | `/api/cover-letter`   | Generates a tailored cover letter.           |
-| `GET`  | `/api/health`         | Returns server status and API key validation. |
+---
 
-**Example Request Body (`/api/analyze`)**
+## 🔌 API Reference
 
+All requests and responses use JSON. Sensitive endpoints are rate-limited.
+
+| Method | Endpoint | Description | Rate Limit |
+|---|---|---|---|
+| `POST` | `/api/analyze` | Full resume review, scoring, keyword gaps, and feedback | 5 req / min |
+| `POST` | `/api/rewrite-bullet` | Rewrites an individual bullet point for impact & metrics | 30 req / 15 min |
+| `POST` | `/api/improve-summary` | Rewrites a candidate's professional opening summary | 30 req / 15 min |
+| `POST` | `/api/interview-questions`| Generates STAR behavioral, technical, and role questions | 5 req / min |
+| `POST` | `/api/cover-letter` | Generates a tailored cover letter (custom tone) | 5 req / min |
+| `GET` | `/api/health` | Health check, API key presence, and active model check | 30 req / 15 min |
+
+### Example Request (`POST /api/analyze`)
 ```json
 {
-  "resumeText": "Full resume text content...",
-  "jobDescription": "Job description (optional)..."
+  "resumeText": "Alex Mercer\nSenior Software Engineer\n- Developed web services...",
+  "jobDescription": "Looking for a Senior Full Stack Engineer with React, Node.js, and AWS experience...",
+  "tailorMode": true
 }
 ```
 
-## 🔐 Security & Secrets
-
-- **API Key Rotation**: If your `GROQ_API_KEY` is accidentally exposed, revoke it immediately in the [Groq console](https://console.groq.com/) and generate a new one.
-- **`.env` File**: Ensure `server/.env` is included in your `.gitignore` to prevent committing secrets.
-- **Production Secrets**: Provide `GROQ_API_KEY` and `CLIENT_ORIGIN` via your hosting provider's environment variable or secrets management system.
+---
 
 ## 🧪 Testing
 
-- **Client-side**: `npm test --prefix client` (React components, utilities using Jest & React Testing Library)
-- **Server-side**: `npm test --prefix server` (Node.js built-in test runner for backend logic)
+Both client and server include isolated, automated test suites.
 
-## 📊 Available Scripts
+```bash
+# Run all client tests (Jest / React Testing Library)
+npm test --prefix client -- --watchAll=false
 
-### Root
-
-- `npm run install:all`: Installs dependencies for both server and client.
-- `npm run dev`: Runs both server and client development servers concurrently.
-- `npm run build`: Installs client dependencies and builds the client for production.
-- `npm start`: Runs the backend server, which can also serve the built client.
-
-### Server Specific
-
-- `npm start` / `npm run dev`: Starts the backend server.
-- `npm test`: Runs server-side unit tests.
-
-### Client Specific
-
-- `npm start`: Starts the React development server.
-- `npm run build`: Creates an optimized production build in `client/build`.
-- `npm test`: Runs client-side tests.
-
-## 🚀 Deployment
-
-This application supports single-service deployments where the Express server serves the built React client.
-
-### Option A: Single Service Hosting (Render, Railway, Heroku)
-
-1.  **Build Command**: `npm run build` (installs deps and builds client).
-2.  **Start Command**: `npm start` (runs `node server/index.js`).
-3.  **Environment Variables**: Set `GROQ_API_KEY` and `CLIENT_ORIGIN` in your platform's dashboard.
-
-### Option B: Separate Frontend/Backend Hosting
-
-1.  **Build Client**: Run `npm run build --prefix client` to generate the `client/build` directory.
-2.  **Deploy Client**: Deploy the `client/build` folder as a static site (e.g., Vercel, Netlify).
-3.  **Deploy Server**: Deploy the `server/` directory as a Node.js application, ensuring `NODE_ENV=production` and `CLIENT_ORIGIN` are set correctly for CORS.
-
-## 🐛 Troubleshooting
-
-- **`GROQ_API_KEY is not set`**: Verify the key in your `.env` file or environment variables. Check the `/api/health` endpoint.
-- **Port Conflict**: If ports 3000 or 5000 are in use, specify alternative ports: `PORT=3001 npm start --prefix client`.
-- **Windows `cmd.exe ENOENT`**: Use separate terminal windows for server and client (`npm start --prefix server` and `npm start --prefix client`).
-- **PDF/DOCX Parsing Issues**: Try different files; check browser console logs for specific errors.
-
-## 📚 Additional Resources
-
-- [Groq API Documentation](https://console.groq.com/docs)
-- [Create React App Documentation](https://create-react-app.dev/)
-- [Express.js Documentation](https://expressjs.com/)
-- [PDF.js Documentation](https://mozilla.github.io/pdf.js/)
-
+# Run all server tests (Native Node.js test runner)
+npm test --prefix server
+```
 
 ---
 
+## 🚢 Production Deployment
+
+ClearHire is architected to support both single-service unified deployments and separated micro-deployments.
+
+### Option 1: Unified Single-Service Deployment (Render / Railway / Heroku)
+In this mode, the Express server builds the React app and serves the compiled static bundle from `client/build` alongside `/api/*`.
+
+1. **Build command**: `npm run build`
+2. **Start command**: `npm start`
+3. **Environment variables**:
+   - `GROQ_API_KEY`: Your production Groq API key
+   - `NODE_ENV`: `production`
+   - `CLIENT_ORIGIN`: Your production application URL (e.g. `https://clearhire.onrender.com`)
+
+### Option 2: Decoupled Deployment (Vercel / Netlify + Render API)
+1. **Frontend**: Deploy `client/` to Vercel/Netlify. Set `REACT_APP_API_URL=https://your-backend-api.com/api`.
+2. **Backend**: Deploy `server/` to Render/Railway. Set `CLIENT_ORIGIN=https://your-frontend-domain.com`.
+
 ---
-**<p align="center">Generated by [ReadmeCodeGen](https://www.readmecodegen.com/)</p>**
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE). Copyright © 2026 Vishwesh Rajopadhye.

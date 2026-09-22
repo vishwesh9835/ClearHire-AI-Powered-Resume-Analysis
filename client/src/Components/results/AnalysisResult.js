@@ -11,6 +11,15 @@ import WeakBullets from "./WeakBullets";
 import StickyReportActions from "./StickyReportActions";
 import InterviewQuestions from "./InterviewQuestions";
 import CoverLetter from "./CoverLetter";
+import SummaryImprover from "./SummaryImprover";
+import Icon from "../Icon";
+
+// Module-level constant on purpose: ScoreCircle restarts its draw animation
+// whenever this prop's identity changes, and an inline array literal would be a
+// brand-new array on every render of this component — so typing in the job
+// description box under a finished report used to replay the score animation
+// on every keystroke.
+const SCORE_GRADIENT = ["#0d9488", "#6366f1"];
 
 function atsBarClass(atsScore) {
   if (atsScore == null || Number.isNaN(Number(atsScore))) return null;
@@ -58,14 +67,14 @@ const AnalysisResult = ({ result, onReset, jobDescription, resumeText, meta }) =
           onClick={onReset}
           id="analyze-again-btn"
         >
-          <span aria-hidden="true">↩</span>
+          <Icon name="rotate-ccw" size={16} />
           <span>New analysis</span>
         </button>
       </div>
 
       {/* ── Score hero ── */}
       <div className="score-section">
-        <ScoreCircle score={result.score} color={["#0d9488", "#6366f1"]} />
+        <ScoreCircle score={result.score} color={SCORE_GRADIENT} />
         <div className="score-info">
           <h3>Resume score</h3>
           {result.summary && <p className="score-summary">{result.summary}</p>}
@@ -107,7 +116,9 @@ const AnalysisResult = ({ result, onReset, jobDescription, resumeText, meta }) =
         {result.skills && result.skills.length > 0 && (
           <div className="result-card result-card-full" {...stagger(0)}>
             <div className="card-header">
-              <div className="card-icon icon-blue">◇</div>
+              <div className="card-icon icon-blue">
+                <Icon name="diamond" />
+              </div>
               <span className="card-title">Detected skills</span>
             </div>
             <div className="skills-grid">
@@ -123,7 +134,9 @@ const AnalysisResult = ({ result, onReset, jobDescription, resumeText, meta }) =
         {result.strengths && result.strengths.length > 0 && (
           <div className="result-card" {...stagger(1)}>
             <div className="card-header">
-              <div className="card-icon icon-green">✓</div>
+              <div className="card-icon icon-green">
+                <Icon name="check-circle" />
+              </div>
               <span className="card-title">Strengths</span>
             </div>
             <ul className="result-list">
@@ -140,7 +153,9 @@ const AnalysisResult = ({ result, onReset, jobDescription, resumeText, meta }) =
         {result.suggestions && result.suggestions.length > 0 && (
           <div className="result-card" {...stagger(2)}>
             <div className="card-header">
-              <div className="card-icon icon-orange">→</div>
+              <div className="card-icon icon-orange">
+                <Icon name="trending-up" />
+              </div>
               <span className="card-title">Improvements</span>
             </div>
             <ul className="result-list">
@@ -157,7 +172,9 @@ const AnalysisResult = ({ result, onReset, jobDescription, resumeText, meta }) =
         {hasAts && (
           <div className="result-card" {...stagger(3)}>
             <div className="card-header">
-              <div className="card-icon icon-cyan">▤</div>
+              <div className="card-icon icon-cyan">
+                <Icon name="shield" />
+              </div>
               <span className="card-title">ATS readiness</span>
             </div>
             <div className="ats-bar-wrapper">
@@ -193,9 +210,13 @@ const AnalysisResult = ({ result, onReset, jobDescription, resumeText, meta }) =
         <ChecklistCard checklist={result.checklist} />
       </div>
 
+      <SummaryImprover
+        summary={result.summary}
+        resumeText={resumeText}
+        jobDescription={jobDescription}
+      />
+
       <WeakBullets weakBullets={result.weakBullets} jobDescription={jobDescription} />
-
-
 
       <InterviewQuestions resumeText={resumeText} jobDescription={jobDescription} />
 
@@ -204,7 +225,9 @@ const AnalysisResult = ({ result, onReset, jobDescription, resumeText, meta }) =
       {result.topRoles && result.topRoles.length > 0 && (
         <div className="result-card result-card-full">
           <div className="card-header">
-            <div className="card-icon icon-purple">◎</div>
+            <div className="card-icon icon-purple">
+              <Icon name="target" />
+            </div>
             <span className="card-title">Role ideas</span>
           </div>
           <div className="roles-list">

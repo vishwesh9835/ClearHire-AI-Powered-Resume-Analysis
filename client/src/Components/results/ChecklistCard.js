@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "../Icon";
 
 const statusClass = {
   pass: "checklist-pass",
@@ -11,7 +12,9 @@ const ChecklistCard = ({ checklist }) => {
   return (
     <div className="result-card result-card-full">
       <div className="card-header">
-        <div className="card-icon icon-green">✓</div>
+        <div className="card-icon icon-green">
+          <Icon name="check-circle" />
+        </div>
         <span className="card-title">Resume quality checklist</span>
       </div>
       <ul className="checklist-list">

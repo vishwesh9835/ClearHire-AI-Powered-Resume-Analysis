@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "../Icon";
 
 const groups = [
   { key: "technical", title: "Technical" },
@@ -16,10 +17,12 @@ const KeywordGroups = ({ keywordsMissing }) => {
   return (
     <div className="result-card result-card-full">
       <div className="card-header">
-        <div className="card-icon icon-red">🔑</div>
+        <div className="card-icon icon-red">
+          <Icon name="key" />
+        </div>
         <span className="card-title">Keyword gaps</span>
       </div>
-      <p className="keyword-groups-hint">
+      <p className="card-hint">
         Terms to weave into your bullets where honest — grouped for clarity.
       </p>
       <div className="keyword-groups-grid">

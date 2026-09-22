@@ -1778,6 +1778,8 @@ body::after {
   width: 1.2em;
 }
 
+.card-hint,
+.keyword-groups-hint,
 .weak-bullets-hint,
 .improve-summary-hint {
   font-size: 0.82rem;

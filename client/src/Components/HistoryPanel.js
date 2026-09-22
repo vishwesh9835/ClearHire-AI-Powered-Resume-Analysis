@@ -4,6 +4,7 @@ import {
   deleteHistoryEntry,
   clearHistory,
 } from "../utils/historyStorage";
+import Icon from "./Icon";
 
 const HistoryPanel = ({ open, onClose, onLoadEntry }) => {
   const [list, setList] = useState([]);
@@ -25,7 +26,7 @@ const HistoryPanel = ({ open, onClose, onLoadEntry }) => {
         <div className="history-header">
           <h2 id="history-title">Saved analyses</h2>
           <button type="button" className="icon-close" onClick={onClose} aria-label="Close history">
-            ×
+            <Icon name="x" size={18} />
           </button>
         </div>
         <p className="history-sub">
