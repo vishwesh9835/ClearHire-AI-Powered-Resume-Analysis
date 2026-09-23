@@ -69,12 +69,12 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "5mb" }));
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
-// General limiter: 30 requests per 15 minutes across all API routes.
-// Heavy limiter: 5 requests per minute for AI-intensive endpoints.
+// General limiter: 60 requests per 15 minutes across all API routes.
+// Heavy limiter: 10 requests per minute for AI-intensive endpoints.
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 30,
+  max: 60,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many requests, please wait a few minutes and try again." },
@@ -82,7 +82,7 @@ const limiter = rateLimit({
 
 const heavyLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 5,
+  max: 10,
   message: { error: "Slow down — you can run 5 analyses per minute." },
 });
 
