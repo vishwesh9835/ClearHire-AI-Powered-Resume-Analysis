@@ -8,24 +8,25 @@
 
 **ClearHire** is a modern, privacy-first career intelligence platform that gives job seekers recruiter-grade resume critiques, ATS compatibility evaluations, tailored keyword gap analysis, AI bullet enhancements, summary rewrites, interview preparation, and custom cover letters in seconds.
 
-Powered by Groq's high-throughput Llama 3.3 70B inference engine.
+Powered by Groq's high-throughput Llama 3.3 70B inference engine with intelligent fallback model chaining.
 
 ---
 
-## 🎯 Features
+## 🎯 Key Features
 
 - **Multi-Format Resume Ingestion**: Upload text-based PDF or DOCX files with automatic layout-aware text extraction, or paste plain text directly.
 - **ATS Readiness Scoring & Rubric**: Strict 0–100 ATS scoring with checks for parsing obstacles (tables, multi-column layouts, unconventional headers, and keyword densities).
 - **Targeted Job Match & Keyword Gap Analysis**: Compare resumes against job descriptions to discover missing technical skills, tools & platforms, and soft skills.
+- **Quick-Fill Role Templates**: Instant job description pre-fills for standard tech roles (*Frontend Engineer*, *Backend Engineer*, *Full Stack Developer*, *Data Scientist*, *Product Manager*, *DevOps / SRE*) for fast role-tailored testing.
+- **Professional PDF Report Export**: One-click generation of beautifully formatted, print-ready A4 PDF reports complete with score dials, section breakdowns, keyword gap pills, and checklist summaries.
 - **Section-by-Section Feedback**: Structured evaluation of Summary, Work Experience, Education, and Projects with specific strengths and areas for improvement.
 - **Weak Bullet Point Rewriter**: Identifies underperforming resume bullets (lacking metrics or action verbs) and rewrites them for measurable impact.
-- **Summary Improver**: Automatically extracts the candidate's existing summary or accepts pasted text, tightening it into 3–5 high-impact opening lines.
+- **Summary Improver**: Automatically extracts the candidate's existing summary or accepts pasted text, tightening it into high-impact opening lines.
 - **Personalized Interview Preparation**: Generates STAR-method behavioral questions, technical probes, role-specific questions, and personalized prep tips.
-- **Tailored Cover Letter Generator**: Writes natural, human-sounding cover letters tailored to the target job description across multiple selectable tones (*Professional*, *Enthusiastic*, *Concise*).
-- **Fast Same-Origin PDF Processing**: Zero external CDN runtime dependencies — PDF.js web workers are automatically vendored at build time to comply with strict Content Security Policies.
-- **Local History & Markdown Export**: Save up to 20 past runs in browser `localStorage` and copy full Markdown audit reports to your clipboard with a single click.
-- **Clean Design System**: Premium dark/light theme switching with custom CSS design tokens, smooth canvas-rendered score animations, and stroke icon graphics.
-- **Privacy by Default**: Resume files are never stored on any server. Analysis runs ephemerally, API keys stay on the backend, and history remains strictly local.
+- **Tailored Cover Letter Generator**: Writes natural, human-sounding cover letters tailored to the target job description across multiple tones (*Professional*, *Enthusiastic*, *Concise*).
+- **High-Contrast Design System**: Accessible, high-contrast badges, tags, and chips with seamless Dark and Light mode theme switching.
+- **Local History**: Save up to 20 past runs in browser `localStorage` for quick re-examination anytime.
+- **Privacy by Default**: Resume files are never stored on any server. Analysis runs ephemerally, API keys stay securely on the backend, and history remains strictly local.
 
 ---
 
@@ -33,8 +34,8 @@ Powered by Groq's high-throughput Llama 3.3 70B inference engine.
 
 ### Frontend
 - **React 19.2** — Modern component architecture and reactive state management.
-- **PDF.js (`pdfjs-dist`) 5.7** — Client-side PDF text extraction with custom baseline-grouping algorithms that preserve layout and token boundaries.
-- **Mammoth.js** — Word (.docx) raw document text extractor.
+- **PDF.js (`pdfjs-dist`) 5.7** — Client-side PDF text extraction with layout preservation.
+- **Mammoth.js** — Word (.docx) document text extractor.
 - **Axios** — Robust API client with environment-aware baseURL resolution.
 - **Vanilla CSS** — Custom design tokens, dark/light theme variables, micro-animations, and zero framework overhead.
 - **Jest & React Testing Library** — Comprehensive frontend unit and component test suites.
@@ -42,7 +43,7 @@ Powered by Groq's high-throughput Llama 3.3 70B inference engine.
 ### Backend
 - **Node.js (v20+ / v24.x)** — High-performance JavaScript runtime.
 - **Express 5.2** — Next-generation HTTP routing framework.
-- **Groq SDK 1.5** — Ultra-fast inference with intelligent fallback model chaining (`groq/compound`, `llama-3.3-70b-versatile`, `llama3-70b-8192`).
+- **Groq SDK 1.5** — Ultra-fast inference with fallback model chaining (`groq/compound`, `llama-3.3-70b-versatile`, `llama3-70b-8192`).
 - **Helmet 8.0** — Advanced HTTP security headers including strict Content-Security-Policy (CSP).
 - **express-rate-limit 7.5** — Tiered rate limiting protecting AI endpoints against abuse.
 - **CORS 2.8** — Configurable origin protection for standalone or decoupled architectures.
@@ -73,7 +74,7 @@ ClearHire/
 │   │   │   ├── ErrorBoundary.js   # Client error boundary
 │   │   │   ├── HistoryPanel.js    # Local analysis history drawer
 │   │   │   ├── Icon.js            # Unified SVG icon library
-│   │   │   ├── ResumeUpload.js    # Primary drag-and-drop & paste interface
+│   │   │   ├── ResumeUpload.js    # Primary drag-and-drop & paste interface + Quick-fill
 │   │   │   └── results/           # Analysis presentation components
 │   │   │       ├── AnalysisResult.js
 │   │   │       ├── ChecklistCard.js
@@ -84,10 +85,12 @@ ClearHire/
 │   │   │       ├── ScoreCircle.js
 │   │   │       ├── SectionFeedback.js
 │   │   │       ├── SkillsMatchBar.js
-│   │   │       ├── StickyReportActions.js
+│   │   │       ├── StickyReportActions.js  # Sticky actions with Export PDF button
 │   │   │       ├── SummaryImprover.js
 │   │   │       ├── TopImprovements.js
 │   │   │       └── WeakBullets.js
+│   │   ├── data/
+│   │   │   └── jobTemplates.js    # Standard role templates for Quick-fill dropdown
 │   │   ├── hooks/
 │   │   │   └── useTheme.js        # Theme state & localStorage synchronization
 │   │   ├── pages/
@@ -96,6 +99,7 @@ ClearHire/
 │   │   │   └── api.js             # Client API service
 │   │   ├── utils/
 │   │   │   ├── buildMarkdownReport.js
+│   │   │   ├── buildPdfReport.js  # A4 PDF report generator & styling
 │   │   │   ├── historyStorage.js
 │   │   │   ├── pdfTextExtraction.js
 │   │   │   ├── PdfParser.js
@@ -128,7 +132,7 @@ ClearHire/
 - **Groq API Key**: Free API key with no credit card required. Obtain one at [console.groq.com](https://console.groq.com/).
 
 ### 2. Installation
-Clone the repository and install all dependencies across workspace packages:
+Clone the repository and install all dependencies:
 ```bash
 git clone https://github.com/vishwesh9835/ClearHire-AI-Powered-Resume-Analysis.git
 cd ClearHire
@@ -194,7 +198,7 @@ All requests and responses use JSON. Sensitive endpoints are rate-limited.
 
 ## 🧪 Testing
 
-Both client and server include isolated, automated test suites.
+Both client and server include automated test suites:
 
 ```bash
 # Run all client tests (Jest / React Testing Library)
@@ -208,8 +212,6 @@ npm test --prefix server
 
 ## 🚢 Production Deployment
 
-ClearHire is architected to support both single-service unified deployments and separated micro-deployments.
-
 ### Option 1: Unified Single-Service Deployment (Render / Railway / Heroku)
 In this mode, the Express server builds the React app and serves the compiled static bundle from `client/build` alongside `/api/*`.
 
@@ -220,9 +222,11 @@ In this mode, the Express server builds the React app and serves the compiled st
    - `NODE_ENV`: `production`
    - `CLIENT_ORIGIN`: Your production application URL (e.g. `https://clearhire.onrender.com`)
 
-### Option 2: Decoupled Deployment (Vercel / Netlify + Render API)
-1. **Frontend**: Deploy `client/` to Vercel/Netlify. Set `REACT_APP_API_URL=https://your-backend-api.com/api`.
-2. **Backend**: Deploy `server/` to Render/Railway. Set `CLIENT_ORIGIN=https://your-frontend-domain.com`.
+### Option 2: Serverless Deployment (Vercel)
+ClearHire includes a pre-configured `vercel.json` and `api/index.js` adapter.
+1. Connect the repository to Vercel.
+2. Set environment variables (`GROQ_API_KEY`, `NODE_ENV=production`).
+3. Deploy! Vercel handles the client build and routes `/api/*` to the serverless function.
 
 ---
 
