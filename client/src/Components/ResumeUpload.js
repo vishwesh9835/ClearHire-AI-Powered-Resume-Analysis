@@ -10,9 +10,6 @@ const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const MIN_TEXT_CHARS = 50;
 const MAX_PASTE_CHARS = 12000;
 
-
-
-
 const LOADING_MESSAGES = [
   "Extracting resume content…",
   "Reading sections and skills…",
@@ -21,7 +18,7 @@ const LOADING_MESSAGES = [
   "Almost done…",
 ];
 
-const ResumeUpload = ({ bootstrap }) => {
+const ResumeUpload = ({ bootstrap, jobTemplates }) => {
   const [inputMode, setInputMode] = useState("file");
   const [file, setFile] = useState(null);
   const [pastedText, setPastedText] = useState("");
@@ -327,10 +324,30 @@ const ResumeUpload = ({ bootstrap }) => {
           )}
 
           <div className="job-field">
-            <label className="field-label" htmlFor="job-description">
-              Job description{" "}
-              <span className="optional">(optional — unlocks match score &amp; keyword gaps)</span>
-            </label>
+            <div className="job-field-header">
+              <label className="field-label" htmlFor="job-description">
+                Job description{" "}
+                <span className="optional">(optional — unlocks match score &amp; keyword gaps)</span>
+              </label>
+              {Array.isArray(jobTemplates) && jobTemplates.length > 0 && (
+                <select
+                  id="job-template-select"
+                  className="job-template-select"
+                  defaultValue=""
+                  onChange={(e) => {
+                    const tpl = jobTemplates.find((t) => t.id === e.target.value);
+                    if (tpl) setJobDescription(tpl.jobDescription);
+                    e.target.value = "";
+                  }}
+                  aria-label="Quick-fill job description from template"
+                >
+                  <option value="">Quick-fill role…</option>
+                  {jobTemplates.map((tpl) => (
+                    <option key={tpl.id} value={tpl.id}>{tpl.label}</option>
+                  ))}
+                </select>
+              )}
+            </div>
             <textarea
               id="job-description"
               className="paste-textarea job-textarea"

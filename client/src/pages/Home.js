@@ -3,6 +3,7 @@ import ResumeUpload from "../Components/ResumeUpload";
 import HistoryPanel from "../Components/HistoryPanel";
 import Icon from "../Components/Icon";
 import { useTheme } from "../hooks/useTheme";
+import { JOB_TEMPLATES } from "../data/jobTemplates";
 
 const FEATURES = [
   { label: "ATS Score", color: "chip-teal" },
@@ -163,7 +164,7 @@ const Home = () => {
           </div>
         </section>
 
-        <ResumeUpload bootstrap={bootstrap} />
+        <ResumeUpload bootstrap={bootstrap} jobTemplates={JOB_TEMPLATES} />
       </main>
 
       <footer className="footer no-print">

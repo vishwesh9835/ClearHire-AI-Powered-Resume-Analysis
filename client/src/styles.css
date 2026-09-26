@@ -406,6 +406,21 @@ body::after {
   color: var(--text-primary);
 }
 
+[data-theme="light"] .feature-chip {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #334155;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .feature-chip:hover {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+  color: #0369a1;
+  transform: translateY(-1px);
+}
+
 .feature-chip-dot {
   width: 5px;
   height: 5px;
@@ -887,33 +902,49 @@ body::after {
 }
 
 .badge-blue {
-  background: rgba(129, 140, 248, 0.12);
-  border: 1px solid rgba(129, 140, 248, 0.26);
+  background: rgba(99, 102, 241, 0.14);
+  border: 1px solid rgba(129, 140, 248, 0.35);
   color: #a5b4fc;
 }
 
 .badge-purple {
-  background: rgba(167, 139, 250, 0.12);
-  border: 1px solid rgba(167, 139, 250, 0.26);
-  color: #c4b5fd;
+  background: rgba(168, 85, 247, 0.14);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  color: #d8b4fe;
 }
 
 .badge-cyan {
-  background: rgba(6, 182, 212, 0.12);
-  border: 1px solid rgba(6, 182, 212, 0.26);
-  color: #67e8f9;
+  background: rgba(14, 165, 233, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
 }
 
 .badge-green {
-  background: rgba(52, 211, 153, 0.12);
-  border: 1px solid rgba(52, 211, 153, 0.28);
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.35);
   color: #6ee7b7;
 }
 
-[data-theme="light"] .badge-blue { color: #4338ca; }
-[data-theme="light"] .badge-purple { color: #6d28d9; }
-[data-theme="light"] .badge-cyan { color: #0e7490; }
-[data-theme="light"] .badge-green { color: #047857; }
+[data-theme="light"] .badge-blue {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  color: #4338ca;
+}
+[data-theme="light"] .badge-purple {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  color: #7e22ce;
+}
+[data-theme="light"] .badge-cyan {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+}
+[data-theme="light"] .badge-green {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
 
 /* Grid cards */
 .results-grid {
@@ -1011,20 +1042,37 @@ body::after {
 }
 
 .skill-tag {
-  background: rgba(6, 182, 212, 0.07);
-  border: 1px solid rgba(6, 182, 212, 0.2);
-  color: #67e8f9;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  color: #38bdf8;
   padding: 5px 14px;
   border-radius: 20px;
   font-size: 0.81rem;
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
   transition: var(--transition);
 }
 
 .skill-tag:hover {
-  background: rgba(6, 182, 212, 0.14);
-  border-color: rgba(6, 182, 212, 0.38);
+  background: rgba(14, 165, 233, 0.22);
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #7dd3fc;
   transform: translateY(-1px);
+}
+
+[data-theme="light"] .skill-tag {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+  color: #0369a1;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(3, 105, 161, 0.05);
+}
+
+[data-theme="light"] .skill-tag:hover {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+  color: #0c4a6e;
 }
 
 /* List items */
@@ -1116,13 +1164,37 @@ body::after {
 }
 
 .keyword-tag {
-  background: rgba(184, 72, 62, 0.07);
-  border: 1px solid rgba(184, 72, 62, 0.18);
-  color: #d99089;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(251, 113, 133, 0.32);
+  color: #fb7185;
   padding: 5px 14px;
   border-radius: 20px;
   font-size: 0.81rem;
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.keyword-tag:hover {
+  background: rgba(244, 63, 94, 0.22);
+  border-color: rgba(251, 113, 133, 0.55);
+  color: #fecdd3;
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .keyword-tag {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #be123c;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(190, 18, 60, 0.05);
+}
+
+[data-theme="light"] .keyword-tag:hover {
+  background: #ffe4e6;
+  border-color: #fda4af;
+  color: #881337;
 }
 
 /* Top roles */
@@ -1464,6 +1536,45 @@ body::after {
 
 .job-field { margin-top: 24px; }
 
+.job-field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.job-template-select {
+  font-size: 0.78rem;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.job-template-select:hover,
+.job-template-select:focus {
+  border-color: var(--accent-teal);
+  color: var(--text-primary);
+  outline: none;
+}
+
+[data-theme="light"] .job-template-select {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .job-template-select:hover,
+[data-theme="light"] .job-template-select:focus {
+  border-color: #0d9488;
+  color: #0f172a;
+}
+
 .tailor-row {
   display: flex;
   align-items: center;
@@ -1670,15 +1781,41 @@ body::after {
 }
 
 .skill-tag-match {
-  border-color: rgba(52, 211, 153, 0.35) !important;
-  color: #6ee7b7 !important;
-  background: rgba(52, 211, 153, 0.07) !important;
+  border-color: rgba(52, 211, 153, 0.38) !important;
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="light"] .skill-tag-match {
+  border-color: #bbf7d0 !important;
+  color: #15803d !important;
+  background: #f0fdf4 !important;
+  box-shadow: 0 1px 2px rgba(21, 128, 61, 0.05);
+}
+
+[data-theme="light"] .skill-tag-match:hover {
+  background: #dcfce7 !important;
+  border-color: #86efac !important;
+  color: #14532d !important;
 }
 
 .skill-tag-gap {
-  border-color: rgba(251, 191, 36, 0.38) !important;
-  color: #fcd34d !important;
-  background: rgba(251, 191, 36, 0.07) !important;
+  border-color: rgba(251, 191, 36, 0.40) !important;
+  color: #fbbf24 !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+}
+
+[data-theme="light"] .skill-tag-gap {
+  border-color: #fde68a !important;
+  color: #b45309 !important;
+  background: #fffbeb !important;
+  box-shadow: 0 1px 2px rgba(180, 83, 9, 0.05);
+}
+
+[data-theme="light"] .skill-tag-gap:hover {
+  background: #fef3c7 !important;
+  border-color: #fcd34d !important;
+  color: #92400e !important;
 }
 
 .keyword-groups-hint {
