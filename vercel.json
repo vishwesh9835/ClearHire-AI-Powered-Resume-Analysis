@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "GENERATE_SOURCEMAP=false npm run build",
   "outputDirectory": "client/build",
   "rewrites": [
     {
