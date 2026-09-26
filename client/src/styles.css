@@ -2187,6 +2187,50 @@ body::after {
   outline-offset: 2px;
 }
 
+/* PDF export button variant */
+.sticky-btn-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #0d9488 0%, #6366f1 100%);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .3px;
+  padding: 10px 20px;
+}
+
+.sticky-btn-pdf:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0f766e 0%, #4f46e5 100%);
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
+  color: #fff;
+}
+
+.sticky-btn-pdf:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner for the export loading state */
+.sticky-btn-spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: sticky-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes sticky-spin {
+  to { transform: rotate(360deg); }
+}
+
+
+
 .footer-link-btn {
   background: none;
   border: none;

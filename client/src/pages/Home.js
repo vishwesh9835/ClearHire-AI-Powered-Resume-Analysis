@@ -149,8 +149,8 @@ const Home = () => {
             </div>
             <div className="hero-divider" aria-hidden="true" />
             <div className="hero-stat">
-              <span className="hero-stat-number">Markdown</span>
-              <span className="hero-stat-label">Copy report</span>
+              <span className="hero-stat-number">PDF</span>
+              <span className="hero-stat-label">Export report</span>
             </div>
           </div>
 

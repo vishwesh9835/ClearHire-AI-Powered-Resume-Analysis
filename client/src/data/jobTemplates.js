@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Job Role Quick-Fill Templates
  * Zero backend work ΓÇö pure data file.
  * Used by the Resume Builder form to auto-fill job description fields.
